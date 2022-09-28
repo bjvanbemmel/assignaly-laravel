@@ -25,12 +25,11 @@ class InstituteController extends Controller
         return $institute;
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Institute $institute)
     {
-        $updatedInstitute = Institute::find($id);
-        $updatedInstitute->update($request->all());
+        $institute->update($request->all());
 
-        return $updatedInstitute;
+        return $institute;
     }
 
     public function destroy(Institute $institute): bool
