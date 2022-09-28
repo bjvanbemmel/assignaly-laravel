@@ -20,9 +20,9 @@ class InstituteController extends Controller
         return $newInstitute;
     }
 
-    public function show(int $id): \App\Models\Institute
+    public function show(Institute $institute): \App\Models\Institute
     {
-        return Institute::findOrFail($id);
+        return $institute;
     }
 
     public function update(Request $request, int $id)
@@ -33,8 +33,8 @@ class InstituteController extends Controller
         return $updatedInstitute;
     }
 
-    public function destroy(int $id): bool
+    public function destroy(Institute $institute): bool
     {
-        return Institute::findOrFail($id)->delete();
+        return $institute->deleteOrFail();
     }
 }
