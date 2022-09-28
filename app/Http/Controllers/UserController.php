@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Support\Collection
     {
-        //
+        return User::all();
     }
 
     public function store(Request $request)
     {
-        //
+
     }
 
-    public function show($id)
+    public function show(User $user)
     {
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         //
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
         //
     }
