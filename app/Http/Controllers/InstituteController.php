@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InstituteStoreRequest;
+use App\Http\Requests\InstituteUpdateRequest;
 use App\Models\Institute;
-use Illuminate\Http\Request;
 
 class InstituteController extends Controller
 {
@@ -25,7 +25,7 @@ class InstituteController extends Controller
         return $institute;
     }
 
-    public function update(Request $request, Institute $institute)
+    public function update(InstituteUpdateRequest $request, Institute $institute)
     {
         $institute->update($request->all());
 
