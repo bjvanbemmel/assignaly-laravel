@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class InstituteSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,10 +14,9 @@ class InstituteSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
-
-        DB::table('institutes')->insert([
-            'name' => $faker->company(),
+        DB::table('roles')->insert([
+            'name' => 'administrator',
+            'level' => 3,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

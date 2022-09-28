@@ -28,8 +28,8 @@ class UserUpdateRequest extends FormRequest
             'name' => 'string|min:2|max:255',
             'email' => 'email|unique:users,email',
             'password' => Password::default(),
-            'institute' => 'exists:institute,id',
-            'exists:roles,id',
+            'institute_id' => 'exists:institute,id',
+            'role_id' => 'exists:roles,id',
         ];
     }
 }

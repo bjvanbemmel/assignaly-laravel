@@ -15,9 +15,7 @@ class InstituteController extends Controller
 
     public function store(InstituteStoreRequest $request): \App\Models\Institute
     {
-        $newInstitute = Institute::create($request->validated());
-
-        return $newInstitute;
+        return Institute::create($request->validated());
     }
 
     public function show(Institute $institute): \App\Models\Institute

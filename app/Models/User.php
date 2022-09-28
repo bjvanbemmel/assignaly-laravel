@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'institute_id',
+        'role_id',
     ];
 
     /**
@@ -42,13 +44,13 @@ class User extends Authenticatable
     ];
 
 
-    public function institute(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function institute(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(Institute::class);
+        return $this->belongsTo(Institute::class);
     }
 
-    public function role(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(Role::class);
+        return $this->belongsTo(Role::class);
     }
 }

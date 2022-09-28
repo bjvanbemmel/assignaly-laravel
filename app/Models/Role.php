@@ -13,4 +13,9 @@ class Role extends Model
         'name',
         'level',
     ];
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }

@@ -34,7 +34,7 @@ Route::controller(UserController::class)->group(function() {
     Route::get('/users/{user}', 'show');
     Route::post('/users', 'store');
     Route::put('/users/{user}', 'update');
-    Route::delete('/users/{user}', 'delete');
+    Route::delete('/users/{user}', 'destroy');
 });
 
 Route::controller(RoleController::class)->group(function() {
@@ -42,5 +42,5 @@ Route::controller(RoleController::class)->group(function() {
     Route::get('/roles/{role}', 'show');
     Route::post('/roles', 'store');
     Route::put('/roles/{role}', 'update');
-    Route::delete('/roles/{role}', 'delete');
+    Route::delete('/roles/{role}', 'destroy');
 });

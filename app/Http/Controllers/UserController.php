@@ -15,9 +15,7 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        $newUser = User::create($request->validated());
-
-        return $newUser;
+        return User::create($request->validated());
     }
 
     public function show(User $user)

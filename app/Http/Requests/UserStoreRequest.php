@@ -28,8 +28,8 @@ class UserStoreRequest extends FormRequest
             'name' => 'string|min:2|max:255|required',
             'email' => 'email|required|unique:users,email',
             'password' => Password::default()->required(),
-            'institute' => 'required|exists:institutes,id',
-            'role' => 'required|exists:roles,id',
+            'institute_id' => 'required|exists:institutes,id',
+            'role_id' => 'required|exists:roles,id',
         ];
     }
 }
