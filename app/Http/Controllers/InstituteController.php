@@ -23,7 +23,7 @@ class InstituteController extends Controller
         return $institute;
     }
 
-    public function update(InstituteUpdateRequest $request, Institute $institute)
+    public function update(InstituteUpdateRequest $request, Institute $institute): \App\Models\Institute
     {
         $institute->update($request->all());
 

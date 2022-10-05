@@ -13,24 +13,24 @@ class UserController extends Controller
         return User::all();
     }
 
-    public function store(UserStoreRequest $request)
+    public function store(UserStoreRequest $request): User
     {
         return User::create($request->validated());
     }
 
-    public function show(User $user)
+    public function show(User $user): User
     {
         return $user;
     }
 
-    public function update(UserUpdateRequest $request, User $user)
+    public function update(UserUpdateRequest $request, User $user): User
     {
         $user->update($request->validated());
 
         return $user;
     }
 
-    public function destroy(User $user)
+    public function destroy(User $user): bool
     {
         return $user->deleteOrFail();
     }

@@ -13,24 +13,24 @@ class RoleController extends Controller
         return Role::all();
     }
 
-    public function store(RoleStoreRequest $request)
+    public function store(RoleStoreRequest $request): Role
     {
         return Role::create($request->validated());
     }
 
-    public function show(Role $role)
+    public function show(Role $role): Role
     {
         return $role;
     }
 
-    public function update(RoleUpdateRequest $request, Role $role)
+    public function update(RoleUpdateRequest $request, Role $role): Role
     {
         $role->update($request->all());
 
         return $role;
     }
 
-    public function destroy(Role $role)
+    public function destroy(Role $role): bool
     {
         return $role->deleteOrFail();
     }

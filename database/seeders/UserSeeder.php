@@ -6,6 +6,7 @@ use App\Models\Institute;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => $faker->name(),
             'email' => $faker->email(),
-            'password' => $faker->password(),
+            'password' => Hash::make($faker->password()),
             'institute_id' => Institute::first()->id,
             'role_id' => Role::first()->id,
             'created_at' => now(),
