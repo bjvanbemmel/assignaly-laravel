@@ -26,5 +26,16 @@ class AssignmentSeeder extends Seeder
             'alphabetic_review' => null,
             'feedback' => $faker->realText,
         ]);
+
+        DB::table('assignments')->insert([
+            'owner_id' => 1,
+            'title' => $faker->sentence(),
+            'description' => $faker->paragraph(),
+            'due_at' => $faker->dateTimeThisYear(),
+            'finished_at' => null,
+            'numeric_review' => $faker->numberBetween(1, 10),
+            'alphabetic_review' => null,
+            'feedback' => $faker->realText,
+        ]);
     }
 }

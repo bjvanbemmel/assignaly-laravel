@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\RoleController;
@@ -45,6 +46,14 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/roles', 'store');
         Route::put('/roles/{role}', 'update');
         Route::delete('/roles/{role}', 'destroy');
+    });
+
+    Route::controller(AssignmentController::class)->group(function() {
+        Route::get('/assignments', 'index');
+        Route::get('/assignments/{assignment}', 'show');
+        Route::post('/assignments', 'store');
+        Route::put('/assignments/{assignment}', 'update');
+        Route::delete('/assignments/{assignment}', 'destroy');
     });
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);

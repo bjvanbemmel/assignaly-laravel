@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Assignment::class, 'owner_id');
     }
+
+    public function assignments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Assignment::class);
+    }
 }

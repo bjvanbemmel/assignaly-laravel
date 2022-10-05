@@ -43,19 +43,13 @@ class Assignment extends Model
         //
     ];
 
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(AssignmentUser::class, 'assignment_users');
+    }
+
     public function owner(): \Illuminate\database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-
-    public function institute(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Institute::class);
-    }
-
-    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Role::class);
     }
 }
