@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Assignment extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -17,11 +15,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'institute_id',
-        'role_id',
+        'owner_id',
+        'title',
+        'description',
+        'due_at',
+        'finished_at',
+        'numeric_review',
+        'alphabetic_review',
+        'feedback',
     ];
 
     /**
@@ -30,8 +31,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        //
     ];
 
     /**
@@ -40,8 +40,13 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        //
     ];
+
+    public function owner(): \Illuminate\database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
     public function institute(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -52,10 +57,5 @@ class User extends Authenticatable
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Role::class);
-    }
-
-    public function ownedAssignments(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Assignment::class, 'owner_id');
     }
 }
