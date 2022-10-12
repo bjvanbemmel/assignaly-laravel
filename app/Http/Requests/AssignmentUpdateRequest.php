@@ -25,12 +25,13 @@ class AssignmentUpdateRequest extends FormRequest
     {
         return [
             'owner_id' => 'int|exists:users,id',
+            'users' => 'array',
+            'users.*' => 'int|exists:users,id',
             'title' => 'string|min:1|max:255',
             'description' => 'string|max:10000',
             'due_at' => 'date',
             'finished_at' => 'date',
             'numeric_review' => 'int|min:1',
-            'alphabetic_review' => 'string',
             'feedback' => 'string'
         ];
     }

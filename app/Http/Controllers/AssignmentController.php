@@ -26,7 +26,13 @@ class AssignmentController extends Controller
      */
     public function store(AssignmentStoreRequest $request): Assignment
     {
-        return Assignment::create($request->validated());
+        $validated = collect($request->validated())->except('users')->toArray();
+        $users = $request->validated()['users'];
+
+        $assignment = Assignment::create($validated);
+        $assignment->users()->sync($users);
+
+        return $assignment;
     }
 
     /**
@@ -49,7 +55,14 @@ class AssignmentController extends Controller
      */
     public function update(Assignment $assignment, AssignmentUpdateRequest $request): Assignment
     {
-        $assignment->update($request->validated());
+        $validated = collect($request->validated())->except('users')->toArray();
+
+        $assignment->update($validated);
+
+        if (isset($request->validated()['users'])) {
+            $users = $request->validated()['users'];
+            $assignment->users()->sync($users);
+        }
 
         return $assignment;
     }
