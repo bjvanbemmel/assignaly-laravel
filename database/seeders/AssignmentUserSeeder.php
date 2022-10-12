@@ -14,14 +14,18 @@ class AssignmentUserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('assignment_user')->insert([
+        DB::table('assignment_users')->insert([
             'assignment_id' => 1,
             'user_id' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        DB::table('assignment_user')->insert([
+        DB::table('assignment_users')->insert([
             'assignment_id' => 2,
             'user_id' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

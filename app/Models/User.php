@@ -61,6 +61,6 @@ class User extends Authenticatable
 
     public function assignments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Assignment::class);
+        return $this->belongsToMany(Assignment::class, 'assignment_users');
     }
 }
