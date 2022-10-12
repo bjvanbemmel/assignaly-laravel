@@ -1,11 +1,14 @@
 <template>
-    <div class="flex justify-center items-center w-screen h-screen">
-        <h1>Hi</h1>
-    </div>
+    <header-bar />
 </template>
 
 <script>
+import HeaderBar from '../components/HeaderBar.vue'
+
 export default {
+    components: {
+        HeaderBar,
+    },
 
 }
 </script>
