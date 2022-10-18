@@ -1,46 +1,46 @@
 # Laravel
-/api/node_modules
-/api/frpublic/build
-/api/public/hot
-/api/public/storage
-/api/storage/*.key
-/api/vendor
-/api/.env
-/api/.env.backup
-/api/.phpunit.result.cache
-/api/Homestead.json
-/api/Homestead.yaml
-/api/auth.json
-/api/npm-debug.log
-/api/yarn-error.log
-/api/.idea
-/api/.vscode
+/assignaly_api/node_modules
+/assignaly_api/frpublic/build
+/assignaly_api/public/hot
+/assignaly_api/public/storage
+/assignaly_api/storage/*.key
+/assignaly_api/vendor
+/assignaly_api/.env
+/assignaly_api/.env.backup
+/assignaly_api/.phpunit.result.cache
+/assignaly_api/Homestead.json
+/assignaly_api/Homestead.yaml
+/assignaly_api/auth.json
+/assignaly_api/npm-debug.log
+/assignaly_api/yarn-error.log
+/assignaly_api/.idea
+/assignaly_api/.vscode
 
 # Vue
-/front-end/logs
-/front-end/*.log
-/front-end/npm-debug.log*
-/front-end/yarn-debug.log*
-/front-end/yarn-error.log*
-/front-end/pnpm-debug.log*
-/front-end/lerna-debug.log*
+/assignaly_front_end/logs
+/assignaly_front_end/*.log
+/assignaly_front_end/npm-debug.log*
+/assignaly_front_end/yarn-debug.log*
+/assignaly_front_end/yarn-error.log*
+/assignaly_front_end/pnpm-debug.log*
+/assignaly_front_end/lerna-debug.log*
 
-/front-end/node_modules
-/front-end/.DS_Store
-/front-end/dist
-/front-end/dist-ssr
-/front-end/coverage
-/front-end/*.local
+/assignaly_front_end/node_modules
+/assignaly_front_end/.DS_Store
+/assignaly_front_end/dist
+/assignaly_front_end/dist-ssr
+/assignaly_front_end/coverage
+/assignaly_front_end/*.local
 
-/front-end/cypress/videos/
-/front-end/cypress/screenshots/
+/assignaly_front_end/cypress/videos/
+/assignaly_front_end/cypress/screenshots/
 
 # Editor directories and files
-/front-end/.vscode/*
-/front-end/!.vscode/extensions.json
-/front-end/.idea
-/front-end/*.suo
-/front-end/*.ntvs*
-/front-end/*.njsproj
-/front-end/*.sln
-/front-end/*.sw?
+/assignaly_front_end/.vscode/*
+/assignaly_front_end/!.vscode/extensions.json
+/assignaly_front_end/.idea
+/assignaly_front_end/*.suo
+/assignaly_front_end/*.ntvs*
+/assignaly_front_end/*.njsproj
+/assignaly_front_end/*.sln
+/assignaly_front_end/*.sw?
