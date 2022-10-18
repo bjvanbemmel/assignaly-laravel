@@ -1,0 +1,115 @@
+/* eslint-env node */
+module.exports = {
+    root: true,
+    'extends': [
+        'plugin:vue/vue3-essential',
+        'eslint:recommended',
+    ],
+
+    'rules': {
+        'semi': [ 'error', 'never', ],
+        'quotes': [ 'warn', 'single', ],
+        'comma-dangle': [ 'error', {
+            'arrays': 'always',
+            'objects': 'always',
+            'imports': 'always',
+        },],
+        'no-multiple-empty-lines': [ 'error', { 'max': 1, }, ],
+        'no-trailing-spaces': [ 'error', { 'ignoreComments': true, },],
+        'space-before-blocks': [ 'error', 'always', ],
+        'space-before-function-paren': [ 'error', 'always', ],
+        'jsx-quotes': [ 'warn', 'prefer-double', ],
+        'no-unused-vars': [ 'warn', ],
+        'indent': [ 'warn', 4, ],
+        'vue/no-unused-vars': [ 'warn', ],
+        'vue/multi-word-component-names': [ 'warn', { 'ignores': [ 'default', ], },],
+        'vue/valid-v-for': [ 'warn', ],
+        'vue/valid-v-slot': [ 'warn', ],
+        'vue/no-v-text-v-html-on-component': [ 'warn', ],
+        'vue/no-reserved-component-names': [ 'warn', ],
+        'vue/require-v-for-key': [ 'warn', ],
+        'vue/new-line-between-multi-line-property': [ 'warn', {
+            'minLineOfMultilineProperty': 2,
+        },],
+        'vue/multiline-html-element-content-newline': [ 'warn', {
+            'ignoreWhenEmpty': true,
+            'ignores': [
+                'a',
+                'abbr',
+                'audio',
+                'b',
+                'bdi',
+                'bdo',
+                'canvas',
+                'cite',
+                'code',
+                'data',
+                'del',
+                'dfn',
+                'em',
+                'i',
+                'iframe',
+                'ins',
+                'kbd',
+                'label',
+                'map',
+                'mark',
+                'noscript',
+                'object',
+                'output',
+                'picture',
+                'q',
+                'ruby',
+                's',
+                'samp',
+                'small',
+                'span',
+                'strong',
+                'sub',
+                'sup',
+                'time',
+                'u',
+                'var',
+                'video',
+                'p',
+            ],
+            'allowEmptyLines': true,
+        },],
+        'vue/html-indent': [ 'warn', 4,],
+        'vue/script-indent': [ 'warn', 4, {
+            'baseIndent': 0,
+            'switchCase': 1,
+        },],
+        'vue/array-bracket-spacing': [ 'warn', 'always', ],
+        'vue/object-curly-spacing': [ 'warn', 'always', ],
+        'vue/max-attributes-per-line': [ 'warn', {
+            'singleline': {
+                'max': 1,
+            },
+            'multiline': {
+                'max': 1,
+            },
+        },],
+        'vue/first-attribute-linebreak': [ 'warn', {
+            'singleline': 'ignore',
+            'multiline': 'below',
+        },],
+        'vue/html-closing-bracket-newline': [ 'warn', {
+            'singleline': 'never',
+            'multiline': 'always',
+        },],
+    },
+
+    'overrides': [
+        {
+            'files': [ '*.vue', ],
+            'rules': {
+                'indent': 'off',
+            },
+        },
+    ],
+
+    parserOptions: {
+        ecmaVersion: 'latest',
+    },
+}
