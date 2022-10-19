@@ -28,6 +28,16 @@ class UserSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'Test User',
+            'email' => 'test@test.nl',
+            'password' => Hash::make('P4$$W0Rd'),
+            'institute_id' => Institute::first()->id,
+            'role_id' => Role::first()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         //
     }
 }

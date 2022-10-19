@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         if (!auth()->attempt($request->validated())) {
-            return response()->json(['status' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         $token = $request->user()->createToken('auth_token')->plainTextToken;
