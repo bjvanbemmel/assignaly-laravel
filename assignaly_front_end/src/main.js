@@ -11,4 +11,8 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
+// Global Components
+import icon from './components/HeroIcon.vue'
+app.component(icon.name, icon)
+
 app.mount('#app')

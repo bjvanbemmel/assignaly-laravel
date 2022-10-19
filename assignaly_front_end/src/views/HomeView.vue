@@ -1,15 +1,15 @@
 <template>
-    <div class="flex justify-center items-center text-green-400">
-        <h1>Test</h1>
-        <h1>Test</h1>
-        <h1>Test</h1>
-        <h1>Test</h1>
-        <h1>Test</h1>
-    </div>
+    <vertical-navigation />
 </template>
 
 <script>
+import VerticalNavigation from '../components/VerticalNavigation.vue'
+
 export default {
+
+    components: {
+        VerticalNavigation,
+    },
 
 }
 </script>
