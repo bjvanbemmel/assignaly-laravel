@@ -1,5 +1,5 @@
 <template>
-    <section class="flex justify-start h-full">
+    <section class="flex justify-center h-full">
         <section
             v-if="loggedIn"
             class="flex h-full"
