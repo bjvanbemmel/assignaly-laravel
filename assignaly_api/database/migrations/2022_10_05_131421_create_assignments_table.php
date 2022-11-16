@@ -21,8 +21,7 @@ return new class extends Migration
             $table->mediumText('description')->nullable();
             $table->dateTime('due_at')->nullable();
             $table->dateTime('finished_at')->nullable();
-            $table->integer('numeric_review')->nullable();
-            $table->enum('alphabetic_review', ['onvoldoende', 'voldoende', 'goed'])->nullable();
+            $table->integer('review')->nullable();
             $table->string('feedback')->nullable();
         });
     }

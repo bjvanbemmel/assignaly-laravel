@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Institute;
 use App\Models\Role;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,8 +26,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make($faker->password()),
             'institute_id' => Institute::first()->id,
             'role_id' => Role::first()->id,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         DB::table('users')->insert([
@@ -35,8 +36,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('P4$$W0Rd'),
             'institute_id' => Institute::first()->id,
             'role_id' => Role::first()->id,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
         //
     }

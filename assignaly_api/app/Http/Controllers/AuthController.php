@@ -42,4 +42,9 @@ class AuthController extends Controller
     {
         return $request->user()->tokens()->delete();
     }
+
+    public function get(Request $request): ?User
+    {
+        return $request->user();
+    }
 }

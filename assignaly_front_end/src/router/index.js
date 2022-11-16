@@ -6,7 +6,9 @@ import { useUserStore } from '../stores/user.js'
 // Views
 import Login from '@/views/authentication/Login.vue'
 import Assignments from '@/views/assignments/Index.vue'
+import Assignment from '@/views/assignments/Detail.vue'
 import Classrooms from '@/views/classrooms/Index.vue'
+import axios from 'axios'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,13 +22,21 @@ const router = createRouter({
             },
         },
         {
-            path: '/',
+            path: '/assignments',
             name: 'assignments',
             component: Assignments,
             meta: {
                 indexed: true,
                 label: 'Assignments',
                 icon: 'PuzzlePiece',
+            },
+        },
+        {
+            path: '/assignment/:id',
+            name: 'assignment',
+            component: Assignment,
+            meta: {
+                indexed: false,
             },
         },
         {
@@ -62,6 +72,9 @@ const router = createRouter({
 
 router.beforeResolve(async (to, from, next) => {
     const user = useUserStore()
+    user.setToken(user.getToken)
+
+    validateUser()
 
     if (to.name !== 'authentication.login' && user.getToken === null) {
         router.push({ name: 'authentication.login' })
@@ -71,7 +84,20 @@ router.beforeResolve(async (to, from, next) => {
         router.push({ name: 'assignments' })
     }
 
+    if (to.path === '/') {
+        router.push({ name: 'assignments' })
+    }
+
     next();
 })
+
+function validateUser() {
+    const user = useUserStore()
+    axios.get('/auth/validate')
+        .catch(() => {
+            user.setToken(null)
+            router.push({ name: 'authentication.login' })
+        })
+}
 
 export default router

@@ -4,27 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AssignmentStoreRequest;
 use App\Http\Requests\AssignmentUpdateRequest;
+use App\Http\Resources\AssignmentResource;
 use App\Models\Assignment;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AssignmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(): \Illuminate\Support\Collection
+    public function index(): AnonymousResourceCollection
     {
-        return Assignment::all();
+        $assignments = Assignment::query()->paginate();
+
+        return AssignmentResource::collection($assignments);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(AssignmentStoreRequest $request): Assignment
+    public function store(AssignmentStoreRequest $request): AssignmentResource
     {
         $validated = collect($request->validated())->except('users')->toArray();
         $users = $request->validated()['users'];
@@ -32,28 +25,15 @@ class AssignmentController extends Controller
         $assignment = Assignment::create($validated);
         $assignment->users()->sync($users);
 
-        return $assignment;
+        return AssignmentResource::make($assignment);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Assignment $assignment): Assignment
+    public function show(Assignment $assignment): AssignmentResource
     {
-        return $assignment;
+        return AssignmentResource::make($assignment);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Assignment $assignment, AssignmentUpdateRequest $request): Assignment
+    public function update(Assignment $assignment, AssignmentUpdateRequest $request): AssignmentResource
     {
         $validated = collect($request->validated())->except('users')->toArray();
 
@@ -64,15 +44,9 @@ class AssignmentController extends Controller
             $assignment->users()->sync($users);
         }
 
-        return $assignment;
+        return AssignmentResource::make($assignment);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Assignment $assignment): bool
     {
         return $assignment->deleteOrFail();

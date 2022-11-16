@@ -57,5 +57,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/validate', [AuthController::class, 'get']);
 });
 
