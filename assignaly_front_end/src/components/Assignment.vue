@@ -3,11 +3,11 @@
         <div class="flex justify-between">
             <h1 class="text-lg font-bold"> {{ assignment.title }} </h1>
             <div class="flex space-x-[-0.33rem]">
-                <user-icon 
+                <user-icon
                     v-for="user, i in assignment.users"
                     :key="i"
                     size="sm"
-                    :user="user" 
+                    :user="user"
                     hover
                     class="outline outline-1"
                 />

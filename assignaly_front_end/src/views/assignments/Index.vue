@@ -20,21 +20,21 @@ export default {
         Assignment,
     },
 
-    mounted() {
+    mounted () {
         axios.get('/assignments')
             .then((res) => {
                 this.assignments = res.data.data
             })
     },
 
-    data() {
+    data () {
         return {
             assignments: [],
         }
     },
 
     methods: {
-        goToAssignment(assignment) {
+        goToAssignment (assignment) {
             this.$router.push({
                 name: 'assignment',
                 params: {
@@ -42,6 +42,6 @@ export default {
                 },
             })
         },
-    }
+    },
 }
 </script>

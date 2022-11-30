@@ -22,7 +22,10 @@
         </section>
 
         <section class="border-t w-full border-gray-400 py-4 flex items-center">
-            <user-icon :user="user" size="lg" />
+            <user-icon
+                :user="user"
+                size="lg"
+            />
             <div class="flex flex-col">
                 <span class="ml-4 text-xl truncate">
                     {{ user.name }}

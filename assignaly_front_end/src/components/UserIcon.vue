@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         @click.stop.prevent=""
         :class="getColor + ' ' + getSize"
         class="cursor-default relative group select-none aspect-square rounded-full flex justify-center items-center font-bold text-white"
@@ -15,7 +15,10 @@
             >
                 <p> {{ user.name }} </p>
                 <p class="text-xs text-gray-600"> {{ role }} </p>
-                <a :href="'mailto:' + user.email" class="text-xs underline text-blue-500 hover:no-underline"> {{ user.email }} </a>
+                <a
+                    :href="'mailto:' + user.email"
+                    class="text-xs underline text-blue-500 hover:no-underline"
+                > {{ user.email }} </a>
             </div>
         </div>
     </div>

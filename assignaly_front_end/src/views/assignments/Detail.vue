@@ -27,7 +27,7 @@ export default {
         UserIcon,
         HeroIcon,
     },
-    
+
     created () {
         axios.get(`/assignments/${this.$route.params.id}`)
             .then((res) => {
@@ -38,8 +38,7 @@ export default {
 
     data () {
         return {
-            assignment: {
-            },
+            assignment: {},
         }
     },
 
