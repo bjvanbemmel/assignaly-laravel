@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('institute_id')->constrained()->cascadeOnDelete();
             $table->foreignId('role_id')->constrained()->cascadeOnDelete();
+            $table->string('settings')->default(json_encode(['profile_icon_color' => 'blue']));
             $table->rememberToken();
             $table->timestamps();
         });

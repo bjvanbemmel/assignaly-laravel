@@ -1,10 +1,13 @@
 <template>
-    <assignment
-        v-for="assignment, i in assignments"
-        :key="i"
-        :assignment="assignment"
-        @click="goToAssignment(assignment)"
-    />
+    <div class="p-4 flex flex-col space-y-4">
+        <assignment
+            v-for="assignment, i in assignments"
+            :key="i"
+            :assignment="assignment"
+            @click.stop="goToAssignment(assignment)"
+            class="hover:cursor-pointer"
+        />
+    </div>
 </template>
 
 <script>
@@ -20,7 +23,6 @@ export default {
     mounted() {
         axios.get('/assignments')
             .then((res) => {
-                console.log(res.data)
                 this.assignments = res.data.data
             })
     },

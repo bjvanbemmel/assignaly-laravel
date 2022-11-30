@@ -1,51 +1,36 @@
 <template>
-    <div class="flex flex-col m-2 p-2 border rounded-md">
-        <h3 class="font-bold">
-            {{ assignment.title }}
-        </h3>
-        <p class="italic truncate">
-            {{ assignment.description }}
-        </p>
-
-        <p>
-            Due at: <span class="italic text-gray-600"> {{ assignment.due_at }} </span>
-        </p>
-
-        <p
-            v-if="isFinished.status"
-        >
-            Finished at: <span class="italic text-gray-600"> {{ assignment.finished_at }} </span>
-        </p>
-
-        <p
-            class="pb-2 border-b border-black"
-            :class="isFinished.classes"
-        >
-            {{ isFinished.message }}
-        </p>
-
+    <div class="p-6 bg-gray-50 border">
+        <div class="flex justify-between">
+            <h1 class="text-lg font-bold"> {{ assignment.title }} </h1>
+            <div class="flex space-x-[-0.33rem]">
+                <user-icon 
+                    v-for="user, i in assignment.users"
+                    :key="i"
+                    size="sm"
+                    :user="user" 
+                    hover
+                    class="outline outline-1"
+                />
+            </div>
+        </div>
+        <div class="border-t border-gray-400 mt-2 pt-2 text-sm">
+            <h3> <span class="font-semibold"> Owner: </span> {{ assignment.owner.name }} </h3>
+            <h3> <span class="font-semibold"> Due at: </span> {{ assignment.due_at }} </h3>
+        </div>
     </div>
 </template>
 
 <script>
+import UserIcon from './../components/UserIcon.vue'
+
 export default {
 
     props: {
-        assignment: {
-            type: Object,
-            required: true,
-        },
+        assignment: {},
     },
 
-    computed: {
-        isFinished() {
-            return {
-                status: this.assignment.finished_at !== null,
-                message: this.assignment.finished_at !== null ? 'Finished' : 'Unfinished',
-                classes: this.assignment.finished_at !== null ? 'text-green-500' : 'text-red-500',
-            }
-        },
+    components: {
+        UserIcon,
     },
-
 }
 </script>

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Institute;
 use App\Models\Role;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,17 +19,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
-
-        DB::table('users')->insert([
-            'name' => $faker->name(),
-            'email' => $faker->email(),
-            'password' => Hash::make($faker->password()),
-            'institute_id' => Institute::first()->id,
-            'role_id' => Role::first()->id,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        User::factory()->count(10)->create();
 
         DB::table('users')->insert([
             'name' => 'Test User',
@@ -39,6 +30,15 @@ class UserSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-        //
+
+        DB::table('users')->insert([
+            'name' => 'Test Admin',
+            'email' => 'admin@test.nl',
+            'password' => Hash::make('P4$$W0Rd'),
+            'institute_id' => Institute::first()->id,
+            'role_id' => Role::first()->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }

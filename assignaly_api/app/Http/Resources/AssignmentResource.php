@@ -21,8 +21,8 @@ class AssignmentResource extends JsonResource
             'due_at' => $this->due_at,
             'finished_at' => $this->finished_at,
             'review' => $this->review,
-            'owner' => $this->owner,
-            'users' => $this->users,
+            'owner' => UserResource::make($this->owner),
+            'users' => UserResource::collection($this->users->sortByDesc('role_id')),
         ];
     }
 }

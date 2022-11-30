@@ -2,14 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\Institute;
+use App\Models\Role;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
+    protected string $user = User::class;
+
     /**
      * Define the model's default state.
      *
@@ -20,9 +27,12 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'password' => Hash::make('P4$$W0Rd'),
+            'institute_id' => Institute::first()->id,
+            'role_id' => Role::find(rand(1, 3))->id,
+            'settings' => Collection::make([ 'profile_icon_color' => $this->getRandomColor(), ]),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 
@@ -36,5 +46,10 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    private function getRandomColor(): string
+    {
+        return ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'lime', 'cyan', 'amber', 'emerald', 'violet', 'fuchsia', 'rose' ][rand(0, 12)];
     }
 }

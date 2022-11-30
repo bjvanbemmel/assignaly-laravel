@@ -22,9 +22,7 @@
         </section>
 
         <section class="border-t w-full border-gray-400 py-4 flex items-center">
-            <div class="w-12 aspect-square bg-blue-500 rounded-full flex justify-center items-center font-bold text-white text-lg">
-                {{ initials }}
-            </div>
+            <user-icon :user="user" size="lg" />
             <div class="flex flex-col">
                 <span class="ml-4 text-xl truncate">
                     {{ user.name }}
@@ -40,11 +38,13 @@
 <script>
 import { useUserStore, } from '../../stores/user.js'
 import HeroIcon from '../../components/HeroIcon.vue'
+import UserIcon from '../../components/UserIcon.vue'
 
 export default {
 
     components: {
         HeroIcon,
+        UserIcon,
     },
 
     data () {
@@ -75,13 +75,9 @@ export default {
         },
 
         role () {
-            const roles = {
-                1: 'Student',
-                2: 'Teacher',
-                3: 'Administrator',
-            }
+            let role = this.user.role.name
 
-            return roles[this.user.role_id]
+            return role.charAt(0).toUpperCase() + role.slice(1)
         },
     },
 }

@@ -32,11 +32,12 @@ const router = createRouter({
             },
         },
         {
-            path: '/assignment/:id',
+            path: '/assignments/:id',
             name: 'assignment',
             component: Assignment,
             meta: {
                 indexed: false,
+                label: 'Assignments',
             },
         },
         {
@@ -70,7 +71,7 @@ const router = createRouter({
     ],
 })
 
-router.beforeResolve(async (to, from, next) => {
+router.beforeResolve(async (to, _, next) => {
     const user = useUserStore()
     user.setToken(user.getToken)
 
