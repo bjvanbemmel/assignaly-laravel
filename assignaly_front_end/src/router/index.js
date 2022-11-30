@@ -23,7 +23,7 @@ const router = createRouter({
         },
         {
             path: '/assignments',
-            name: 'assignments',
+            name: 'assignments.index',
             component: Assignments,
             meta: {
                 indexed: true,
@@ -33,7 +33,7 @@ const router = createRouter({
         },
         {
             path: '/assignments/:id',
-            name: 'assignment',
+            name: 'assignments.detail',
             component: Assignment,
             meta: {
                 indexed: false,
@@ -42,7 +42,7 @@ const router = createRouter({
         },
         {
             path: '/classrooms',
-            name: 'classrooms',
+            name: 'classrooms.index',
             component: Classrooms,
             meta: {
                 indexed: true,

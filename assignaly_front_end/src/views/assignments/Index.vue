@@ -36,7 +36,7 @@ export default {
     methods: {
         goToAssignment (assignment) {
             this.$router.push({
-                name: 'assignment',
+                name: 'assignments.detail',
                 params: {
                     id: assignment.id,
                 },

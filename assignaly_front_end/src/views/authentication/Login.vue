@@ -49,7 +49,7 @@ export default {
 
                     user.setToken(res.data.token)
                     user.setData(res.data.user)
-                    this.$router.push({ name: 'assignments', })
+                    this.$router.push({ name: 'assignments.index', })
                 })
                 .catch((res) => {
                     console.log(res)

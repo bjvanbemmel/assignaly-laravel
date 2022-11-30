@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AssignmentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,7 @@ class Assignment extends Model
         'finished_at',
         'review',
         'feedback',
+        'status',
     ];
 
     /**
@@ -39,7 +41,7 @@ class Assignment extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        //
+        'assignment' => AssignmentStatusEnum::class,
     ];
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -22,7 +22,7 @@ module.exports = {
         'no-unused-vars': [ 'warn', ],
         'indent': [ 'warn', 4, ],
         'vue/no-unused-vars': [ 'warn', ],
-        'vue/multi-word-component-names': [ 'warn', { 'ignores': [ 'default', ], },],
+        'vue/multi-word-component-names': [ 'off', ],
         'vue/valid-v-for': [ 'warn', ],
         'vue/valid-v-slot': [ 'warn', ],
         'vue/no-v-text-v-html-on-component': [ 'warn', ],
