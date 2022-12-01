@@ -1,7 +1,7 @@
 <template>
     <div class="p-6 bg-gray-50 border">
         <div class="flex justify-between">
-            <h1 class="text-lg font-bold"> {{ assignment.title }} </h1>
+            <h1 class="text-lg font-bold w-[32rem] truncate"> {{ assignment.title }} </h1>
             <div class="flex space-x-[-0.33rem]">
                 <user-icon
                     v-for="user, i in users.slicedUsers"
@@ -12,6 +12,7 @@
                     class="outline outline-1"
                 />
                 <user-icon-overflow
+                    v-if="users.overflowUsers.length > 0"
                     :users="assignment.users"
                     size="sm"
                     hover
@@ -28,7 +29,7 @@
 
         <modal
             :active="modal.active"
-            @close="() => modal.active = false"
+            @close="() => toggleModal()"
         >
             <template v-slot:title>
                 Users
@@ -60,7 +61,7 @@
                         </div>
                         <a
                             :href="`mailto: ${user.email}`"
-                            class="absolute right-1.5 bottom-1.5 h-fit text-blue-500 text-xs"
+                            class="absolute underline hover:no-underline right-1.5 bottom-1.5 h-fit text-blue-500 text-xs"
                         >
                             {{ user.email }}
                         </a>

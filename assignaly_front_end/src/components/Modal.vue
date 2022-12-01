@@ -8,7 +8,7 @@
             class="cursor-default bg-white p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
         >
             <div
-                class="text-lg w-full"
+                class="text-lg text-center"
             >
                 <slot
                     @click.stop=""
@@ -17,7 +17,7 @@
             </div>
 
             <div
-                class="text-xs text-gray-500 font-medium border-b pb-2 mb-2"
+                class="text-xs text-center text-gray-500 font-medium border-b pb-2 mb-2"
             >
                 <slot
                     @click.stop=""
