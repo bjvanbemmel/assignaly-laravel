@@ -7,10 +7,10 @@
             <div class="w-1/4 min-w-[24rem]">
                 <vertical-navigation />
             </div>
-            <div class="lg:w-2/4 w-3/4 min-w-[50rem] max-w-[50rem] bg-white border-2 border-gray-200 flex flex-col overflow-y-scroll">
+            <main class="lg:w-2/4 w-3/4 min-w-[50rem] max-w-[50rem] bg-white border-2 border-gray-200 flex flex-col overflow-y-scroll">
                 <horizontal-navigation />
                 <router-view />
-            </div>
+            </main>
         </section>
 
         <section

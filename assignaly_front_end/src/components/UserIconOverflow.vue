@@ -6,56 +6,6 @@
         title="View all users"
     >
         +{{ amount ?? users.length }}
-        <modal
-            :active="modal.active"
-            title=""
-            @close="() => modal.active = false"
-        >
-            <template v-slot:title>
-                Users
-            </template>
-
-            <template v-slot:desc>
-                All of the users this assignment is assigned to.
-            </template>
-
-            <template v-slot:content>
-                <div
-                    class="flex flex-col origin-top space-y-2 h-80 overflow-y-scroll"
-                >
-                    <div
-                        v-for="user, key in users"
-                        :key="key"
-                        class="flex relative space-x-2 bg-gray-50 border p-1.5"
-                    >
-                        <user-icon
-                            :user="user"
-                            size="sm"
-                            class="w-8"
-                        />
-                        <div
-                            class="flex-col text-left"
-                        >
-                            <p class="text-sm"> {{ user.name }} </p>
-                            <p class="text-xs text-gray-500"> {{ this.role(user) }} </p>
-                        </div>
-                        <a
-                            :href="`mailto: ${user.email}`"
-                            class="absolute right-1.5 bottom-1.5 h-fit text-blue-500 text-xs"
-                        >
-                            {{ user.email }}
-                        </a>
-                    </div>
-                </div>
-            </template>
-
-            <template v-slot:actions>
-                <default-button
-                    text="Close"
-                />
-            </template>
-
-        </modal>
     </button>
 </template>
 
