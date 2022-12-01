@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Assignment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,12 +18,12 @@ class AssignmentUserSeeder extends Seeder
     {
         DB::table('assignment_users')->insert([
             'assignment_id' => 1,
-            'user_id' => 1,
+            'user_id' => 3,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        User::all()->each(function (User $user) {
+        User::all()->except(Assignment::find(2)->owner->id)->each(function (User $user) {
             DB::table('assignment_users')->insert([
                 'assignment_id' => 2,
                 'user_id' => $user->id,

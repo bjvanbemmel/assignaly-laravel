@@ -1,6 +1,6 @@
 <template>
     <div
-        @click.stop.prevent=""
+        @click.stop=""
         :class="getColor + ' ' + getSize"
         class="cursor-default relative group select-none aspect-square rounded-full flex justify-center items-center font-bold text-white"
     >

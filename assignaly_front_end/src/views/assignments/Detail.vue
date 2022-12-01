@@ -1,6 +1,6 @@
 <template>
     <div
-        class="m-4 p-6 bg-gray-50 border overflow-y-scroll"
+        class="m-4 p-6 bg-gray-50 border"
     >
         <hero-icon
             v-if="!assignment"
@@ -21,18 +21,9 @@
                 class="flex space-x-2 bg-gray-100 border-b mt-4 p-2"
             >
                 <default-dropdown
-                    class="hidden"
                     :options="dropdownOptions"
-                />
-                <default-button
-                    v-if="assignment.status !== 'Closed'"
-                    text="Close"
-                    @click="closeAssignment"
-                />
-                <default-button
-                    v-if="assignment.status !== 'Open'"
-                    text="Open"
-                    @click="openAssignment"
+                    :default="dropdownSelected"
+                    @update="(option) => dropdownStatusUpdate(option)"
                 />
                 <default-button
                     text="Turn in"
@@ -69,6 +60,7 @@ export default {
         return {
             assignment: null,
 
+            dropdownSelected: null,
             dropdownOptions: [
                 {
                     label: 'Open',
@@ -90,20 +82,22 @@ export default {
             axios.get(`/assignments/${this.$route.params.id}`)
                 .then((res) => {
                     this.assignment = res.data.data
+                    this.dropdownSelected = {
+                        label: res.data.data.status
+                    }
+
                     this.loading = false
                 })
         },
 
-        closeAssignment () {
-            axios.put(`/assignments/${this.assignment.id}`, {
-                status: 'Closed',
-            })
-                .then(() => this.fetchData())
+        dropdownStatusUpdate (status) {
+            this.dropdownSelected = status
+            this.updateAssignmentStatus(status)
         },
 
-        openAssignment () {
+        updateAssignmentStatus (status) {
             axios.put(`/assignments/${this.assignment.id}`, {
-                status: 'Open',
+                status: status.label,
             })
                 .then(() => this.fetchData())
         },

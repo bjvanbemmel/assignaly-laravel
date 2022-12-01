@@ -13,7 +13,7 @@
                 />
             </div>
         </div>
-        <div class="border-t border-gray-400 mt-2 pt-2 text-sm">
+        <div class="border-t border-gray-300 mt-2 pt-2 text-sm">
             <h3> <span class="font-semibold"> Owner: </span> {{ assignment.owner.name }} </h3>
             <h3> <span class="font-semibold"> Due at: </span> {{ assignment.due_at }} </h3>
         </div>
