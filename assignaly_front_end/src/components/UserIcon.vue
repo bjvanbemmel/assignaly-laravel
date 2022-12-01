@@ -7,7 +7,7 @@
         {{ initials }}
         <div
             v-if="hover"
-            class="absolute hidden group-hover:flex flex-col items-center z-10 bottom-6 px-2 h-24"
+            class="absolute hidden group-hover:flex flex-col items-center z-40 bottom-6 px-2 h-24"
         >
             <div
                 :class="getBorder"
