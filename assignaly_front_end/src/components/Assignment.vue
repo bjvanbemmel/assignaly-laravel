@@ -4,12 +4,19 @@
             <h1 class="text-lg font-bold"> {{ assignment.title }} </h1>
             <div class="flex space-x-[-0.33rem]">
                 <user-icon
-                    v-for="user, i in assignment.users"
+                    v-for="user, i in users.slicedUsers"
                     :key="i"
                     size="sm"
                     :user="user"
                     hover
                     class="outline outline-1"
+                />
+                <user-icon-overflow
+                    :users="assignment.users"
+                    size="sm"
+                    hover
+                    :amount="users.overflowUsers.length"
+                    class="z-10"
                 />
             </div>
         </div>
@@ -22,15 +29,29 @@
 
 <script>
 import UserIcon from './../components/UserIcon.vue'
+import UserIconOverflow from './../components/UserIconOverflow.vue'
 
 export default {
+
+    components: {
+        UserIcon,
+        UserIconOverflow,
+    },
 
     props: {
         assignment: {},
     },
 
-    components: {
-        UserIcon,
+    computed: {
+        users () {
+            const slicedUsers = this.assignment.users.slice(0, 5)
+            const overflowUsers = this.assignment.users.slice(5, this.assignment.users.length - 1)
+
+            return {
+                slicedUsers: slicedUsers,
+                overflowUsers: overflowUsers,
+            }
+        },
     },
 }
 </script>
