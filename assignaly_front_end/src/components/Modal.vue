@@ -8,38 +8,31 @@
             class="cursor-default shadow-lg bg-white p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
         >
             <div
+                @click.stop=""
                 class="text-lg text-center"
             >
-                <slot
-                    @click.stop=""
-                    name="title"
-                />
+                <slot name="title" />
             </div>
 
             <div
+                @click.stop=""
                 class="text-xs text-center text-gray-500 font-medium border-b pb-2 mb-2"
             >
-                <slot
-                    @click.stop=""
-                    name="desc"
-                />
+                <slot name="desc" />
             </div>
 
-            <div>
-                <slot
-                    @click.stop=""
-                    name="content"
-                />
+            <div
+                @click.stop=""
+            >
+                <slot name="content" />
             </div>
 
             <div
                 class="flex justify-end space-x-2 border-t pt-2 mt-2"
                 v-if="this.$slots.actions"
+                @click.stop=""
             >
-                <slot
-                    @click.stop=""
-                    name="actions"
-                />
+                <slot name="actions" />
             </div>
         </div>
     </div>
@@ -58,6 +51,7 @@ export default {
 
     methods: {
         toggleModal () {
+            console.log('sadge')
             this.$emit('close')
         },
     },
