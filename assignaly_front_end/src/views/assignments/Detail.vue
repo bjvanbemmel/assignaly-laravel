@@ -31,10 +31,42 @@
                 />
                 <default-button
                     text="Delete"
-                    @click="deleteAssignment"
-/>
+                    @click="toggleDeletionModal"
+                />
             </div>
         </div>
+        <modal
+            :active="modal.active"
+            @click.stop="() => toggleDeletionModal()"
+        >
+            <template v-slot:title>
+                Delete assignment
+            </template>
+
+            <template v-slot:desc>
+                This action will permanently delete this assignment.
+            </template>
+
+            <template v-slot:content>
+                <div class="w-full text-center">
+                    <p>Are you sure you wish to permanently delete this assignment?</p>
+                    <p>Assigned users will be notified.</p>
+                    <p class="text-red-600 font-bold">This action is irreversible.</p>
+                </div>
+            </template>
+
+            <template v-slot:actions>
+                <default-button
+                    text="Delete"
+                    @click.stop="() => approveDeletionModal()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    @click.stop="() => toggleDeletionModal()"
+                />
+            </template>
+        </modal>
     </div>
 </template>
 
@@ -42,6 +74,7 @@
 import HeroIcon from './../../components/HeroIcon.vue'
 import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
 import DefaultDropdown from './../../components/FormInputs/DefaultDropdown.vue'
+import Modal from './../../components/Modal.vue'
 import axios from 'axios'
 
 export default {
@@ -50,6 +83,7 @@ export default {
         HeroIcon,
         DefaultButton,
         DefaultDropdown,
+        Modal,
     },
 
     created () {
@@ -59,6 +93,9 @@ export default {
     data () {
         return {
             assignment: null,
+            modal: {
+                active: false,
+            },
 
             dropdownSelected: null,
             dropdownOptions: [
@@ -83,7 +120,7 @@ export default {
                 .then((res) => {
                     this.assignment = res.data.data
                     this.dropdownSelected = {
-                        label: res.data.data.status
+                        label: res.data.data.status,
                     }
 
                     this.loading = false
@@ -105,6 +142,16 @@ export default {
         deleteAssignment () {
             axios.delete(`/assignments/${this.assignment.id}`)
                 .then(() => this.$router.push({ name: 'assignments.index', }))
+        },
+
+        toggleDeletionModal () {
+            this.modal.active = !this.modal.active
+        },
+
+        approveDeletionModal () {
+            this.toggleDeletionModal()
+
+            this.deleteAssignment()
         },
     },
 
