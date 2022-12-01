@@ -1,6 +1,6 @@
 <template>
     <div
-        class="m-4 p-6 bg-gray-50 border"
+        class="p-4 bg-gray-50 border"
     >
         <hero-icon
             v-if="!assignment"

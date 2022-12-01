@@ -1,5 +1,5 @@
 <template>
-    <div class="flex float-right w-96 flex-col items-end px-12 justify-end h-full">
+    <div class="flex fixed z-40 bg-gray-100 border-2 border-gray-200 w-96 flex-col items-end px-12 justify-end h-full">
         <section class="w-full">
             <ul class="my-8 w-full flex-col ">
                 <li

@@ -5,7 +5,7 @@
         class="z-40 cursor-pointer bg-black bg-opacity-25 absolute w-screen h-screen top-0 left-0 flex justify-center items-center"
     >
         <div
-            class="cursor-default bg-white p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
+            class="cursor-default shadow-lg bg-white p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
         >
             <div
                 class="text-lg text-center"

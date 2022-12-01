@@ -1,11 +1,11 @@
 <template>
-    <div class="p-4 flex flex-col space-y-4">
+    <div class="flex flex-col space-y-4">
         <assignment
             v-for="assignment, i in assignments"
             :key="i"
             :assignment="assignment"
             @click.stop="goToAssignment(assignment)"
-            class="hover:cursor-pointer"
+            class="hover:cursor-pointer "
         />
     </div>
 </template>

@@ -1,24 +1,26 @@
 <template>
-    <section class="flex justify-center h-full">
-        <section
-            v-if="loggedIn"
-            class="flex h-full"
-        >
-            <div class="w-1/4 min-w-[24rem]">
-                <vertical-navigation />
+    <section
+        v-if="loggedIn"
+        class="flex h-full w-full"
+    >
+        <vertical-navigation />
+        <main class="ml-96 w-full">
+            <horizontal-navigation />
+            <div
+                class="mt-14 p-4"
+            >
+                <router-view 
+                    class="min-w-[32rem] max-w-[64rem]"
+                />
             </div>
-            <main class="lg:w-2/4 w-3/4 min-w-[50rem] max-w-[50rem] bg-white border-2 border-gray-200 flex flex-col overflow-y-scroll">
-                <horizontal-navigation />
-                <router-view />
-            </main>
-        </section>
+        </main>
+    </section>
 
-        <section
-            v-else
-            class="h-full overflow-y-scroll"
-        >
-            <router-view />
-        </section>
+    <section
+        v-else
+        class="h-full overflow-y-scroll"
+    >
+        <router-view />
     </section>
 </template>
 
