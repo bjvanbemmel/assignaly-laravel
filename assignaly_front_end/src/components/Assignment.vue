@@ -72,6 +72,7 @@
             <template v-slot:actions>
                 <default-button
                     text="Close"
+                    @click="() => toggleModal()"
                 />
             </template>
 

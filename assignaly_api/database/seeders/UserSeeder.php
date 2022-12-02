@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@test.nl',
             'password' => Hash::make('P4$$W0Rd'),
             'institute_id' => Institute::first()->id,
-            'role_id' => Role::first()->id,
+            'role_id' => Role::find(3)->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
