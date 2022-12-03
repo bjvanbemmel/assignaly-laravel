@@ -7,12 +7,20 @@ use App\Http\Requests\AssignmentUpdateRequest;
 use App\Http\Resources\AssignmentResource;
 use App\Models\Assignment;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class AssignmentController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $assignments = Assignment::query()->paginate();
+        $assignments = Auth()->user()->ownedAssignments()->paginate();
+
+        return AssignmentResource::collection($assignments);
+    }
+
+    public function latest(): AnonymousResourceCollection
+    {
+        $assignments = Auth::user()->ownedAssignments()->orderByDesc('created_at')->take(5)->get();
 
         return AssignmentResource::collection($assignments);
     }

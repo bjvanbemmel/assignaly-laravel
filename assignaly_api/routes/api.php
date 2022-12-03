@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::controller(AssignmentController::class)->group(function() {
         Route::get('/assignments', 'index');
+        Route::get('/assignments/latest', 'latest');
         Route::get('/assignments/{assignment}', 'show');
         Route::post('/assignments', 'store');
         Route::put('/assignments/{assignment}', 'update');

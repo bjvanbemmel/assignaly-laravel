@@ -81,10 +81,10 @@
 </template>
 
 <script>
-import UserIcon from './../components/UserIcon.vue'
-import UserIconOverflow from './../components/UserIconOverflow.vue'
-import DefaultButton from './../components/FormInputs/DefaultButton.vue'
-import Modal from './../components/Modal.vue'
+import UserIcon from './../../components/UserIcon.vue'
+import UserIconOverflow from './../../components/UserIconOverflow.vue'
+import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
+import Modal from './../../components/Modal.vue'
 
 export default {
 

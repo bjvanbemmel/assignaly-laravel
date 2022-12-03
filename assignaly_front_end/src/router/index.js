@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, } from 'vue-router'
 
 // Store
-import { useUserStore } from '../stores/user.js'
+import { useUserStore, } from '../stores/user.js'
 
 // Views
 import Login from '@/views/authentication/Login.vue'
@@ -16,6 +16,14 @@ const router = createRouter({
         {
             path: '/login',
             name: 'authentication.login',
+            component: Login,
+            meta: {
+                indexed: false,
+            },
+        },
+        {
+            path: '/logout',
+            name: 'authentication.logout',
             component: Login,
             meta: {
                 indexed: false,
@@ -51,8 +59,8 @@ const router = createRouter({
             },
         },
         {
-            path: '/settings',
-            name: 'settings',
+            path: '/user/settings',
+            name: 'user.settings',
             component: Classrooms,
             meta: {
                 indexed: true,

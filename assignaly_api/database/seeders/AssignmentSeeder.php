@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
+use App\Models\Assignment;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class AssignmentSeeder extends Seeder
 {
@@ -15,30 +14,6 @@ class AssignmentSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
-
-        DB::table('assignments')->insert([
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'owner_id' => 1,
-            'title' => $faker->sentence(),
-            'description' => $faker->paragraph(),
-            'due_at' => $faker->dateTimeThisYear(),
-            'finished_at' => null,
-            'review' => $faker->numberBetween(1, 10),
-            'feedback' => $faker->realText,
-        ]);
-
-        DB::table('assignments')->insert([
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'owner_id' => 1,
-            'title' => $faker->sentence(),
-            'description' => $faker->paragraph(),
-            'due_at' => $faker->dateTimeThisYear(),
-            'finished_at' => null,
-            'review' => $faker->numberBetween(1, 10),
-            'feedback' => $faker->realText,
-        ]);
+        Assignment::factory()->count(15)->create();
     }
 }

@@ -1,0 +1,117 @@
+<template>
+    <div
+        :class="isActive ? 'h-max w-64 text-full py-2 border opacity-100' : 'h-0 w-0 text-[0%] py-0 opacity-0'"
+        class="absolute duration-100 px-2 transition-all flex flex-col overflow-hidden top-14 right-0 border-zinc-700 bg-zinc-800"
+    >
+        <div
+            v-if="isActive"
+            class="flex items-center space-x-2 pb-2 mb-2 border-b border-b-zinc-700"
+        >
+            <user-icon
+                :user="user"
+                size="lg"
+            />
+
+            <div
+                class="flex flex-col"
+            >
+                <p
+                    class="text-lg"
+                >
+                    {{ user.name }}
+                </p>
+                <p
+                    class="text-sm text-zinc-400"
+                >
+                    {{ user.role.public_name }}
+                </p>
+                <a
+                    class="text-sm text-blue-400 underline hover:no-underline hover:cursor-pointer"
+                    :href="'mailto:' + user.email"
+                >
+                    {{ user.email }}
+                </a>
+            </div>
+        </div>
+        <div
+            v-if="isActive"
+            class="flex flex-col"
+        >
+            <router-link
+                v-for="route, key in routes"
+                :key="key"
+                class="flex items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
+                :to="{ name: route.name }"
+            >
+                <hero-icon
+                    class="h-5"
+                    variant="mini"
+                    :name="route.icon"
+                />
+                <p> {{ route.label }} </p>
+            </router-link>
+        </div>
+    </div>
+</template>
+
+<script>
+import UserIcon from './../UserIcon.vue'
+import HeroIcon from './../HeroIcon.vue'
+import { useDropdownStore } from './../../stores/dropdown.js'
+
+export default {
+
+    components: {
+        UserIcon,
+        HeroIcon,
+    },
+
+    mounted () {
+        const dropdownStore = useDropdownStore()
+
+        dropdownStore.$subscribe((_, state) => this.setIsActive(state))
+    },
+
+    data () {
+        return {
+            isActive: false,
+            routes: [
+                {
+                    name: 'user.settings',
+                    label: 'Account settings',
+                    icon: 'Cog6Tooth',
+                },
+                {
+                    name: 'authentication.logout',
+                    label: 'Logout',
+                    icon: 'ArrowRightOnRectangle',
+                },
+            ],
+        }
+    },
+
+    props: {
+        user: {
+            type: Object,
+            required: true,
+        },
+
+        active: {
+            type: Boolean,
+            default: false,
+        },
+
+        name: {
+            type: String,
+            required: true,
+        },
+    },
+
+    methods: {
+        setIsActive (state) {
+            this.isActive = state.name === this.name
+        }
+    },
+
+}
+</script>

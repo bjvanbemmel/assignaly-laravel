@@ -12,7 +12,7 @@
 
 <script>
 import axios from 'axios'
-import Assignment from '../../components/Assignment.vue'
+import Assignment from '../../components/Assignments/Assignment.vue'
 
 export default {
 

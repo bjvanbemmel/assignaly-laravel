@@ -2,13 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
-     *  @mixin User
+     *  @mixin Role
      */
     public function toArray($request)
     {
@@ -17,10 +17,8 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'name' => $this->name,
-            'email' => $this->email,
-            'institute' => $this->institute,
-            'role' => RoleResource::make($this->role),
-            'settings' => $this->settings,
+            'public_name' => ucfirst($this->name),
+            'level' => $this->level,
         ];
     }
 }
