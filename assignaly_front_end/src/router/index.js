@@ -6,6 +6,8 @@ import { useDropdownStore, } from '../stores/dropdown.js'
 
 // Views
 import Login from '@/views/authentication/Login.vue'
+import PageNotFound from '@/views/pagenotfound/Index.vue'
+import Dashboard from '@/views/dashboard/Index.vue'
 import Assignments from '@/views/assignments/Index.vue'
 import Assignment from '@/views/assignments/Detail.vue'
 import Classrooms from '@/views/classrooms/Index.vue'
@@ -28,6 +30,22 @@ const router = createRouter({
             component: Login,
             meta: {
                 indexed: false,
+            },
+        },
+        {
+            path: '/page-not-found',
+            name: '404',
+            component: PageNotFound,
+        },
+        {
+            path: '/:pathMatch(.*)',
+            redirect: '/page-not-found',
+        },
+        {
+            path: '/',
+            name: 'dashboard',
+            component: Dashboard,
+            meta: {
             },
         },
         {
@@ -93,10 +111,6 @@ router.beforeResolve(async (to, _, next) => {
     }
 
     if (to.name === 'authentication.login' && user.getToken !== null) {
-        router.push({ name: 'assignments' })
-    }
-
-    if (to.path === '/') {
         router.push({ name: 'assignments' })
     }
 

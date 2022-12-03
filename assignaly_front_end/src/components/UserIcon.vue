@@ -1,22 +1,21 @@
 <template>
     <div
         :class="getColor + ' ' + getSize"
-        class="cursor-default relative group select-none aspect-square rounded-full flex justify-center items-center font-bold text-white"
+        class="cursor-default relative group select-none aspect-square rounded-full flex justify-center items-center font-bold"
     >
-        {{ initials }}
+        <span class="text-white">{{ initials }}</span>
         <div
             v-if="hover"
             class="absolute hidden group-hover:flex flex-col items-center z-40 bottom-6 px-2 h-24"
         >
             <div
-                :class="getBorder"
-                class="hidden group-hover:flex flex-col w-max p-2 bg-white border-2 text-gray-800 h-4/5"
+                class="hidden group-hover:flex flex-col w-max p-2 bg-zinc-800 border border-zinc-700 h-4/5"
             >
                 <p> {{ user.name }} </p>
-                <p class="text-xs text-gray-600"> {{ role }} </p>
+                <p class="text-xs text-zinc-400"> {{ role }} </p>
                 <a
                     :href="'mailto:' + user.email"
-                    class="text-xs underline text-blue-500 hover:no-underline"
+                    class="text-xs underline text-blue-400 hover:no-underline"
                 > {{ user.email }} </a>
             </div>
         </div>
@@ -52,11 +51,11 @@ export default {
         },
 
         getColor () {
-            return `bg-${this.user.settings.profile_icon_color}-500`
+            return `bg-${this.user.settings.profile_icon_color}-800`
         },
 
         getBorder () {
-            return `border-${this.user.settings.profile_icon_color}-500`
+            return `border-${this.user.settings.profile_icon_color}-600`
         },
 
         getSize () {

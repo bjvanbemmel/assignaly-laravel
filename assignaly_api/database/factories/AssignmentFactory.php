@@ -20,9 +20,10 @@ class AssignmentFactory extends Factory
     {
         return [
             'owner_id' => User::where('name', '=', 'Test User')->first()->id,
+            'created_at' => fake()->dateTimeThisYear(),
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
-            'due_at' => fake()->dateTimeThisYear(),
+            'due_at' => fake()->dateTimeThisMonth(),
             'finished_at' => [ null, now() ][ rand(0, 1) ],
             'review' => fake()->numberBetween(1, 10),
             'feedback' => fake()->realText(),

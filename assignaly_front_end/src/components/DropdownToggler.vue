@@ -12,27 +12,33 @@ import { useDropdownStore, } from './../stores/dropdown.js'
 export default {
 
     props: {
-        dropdown: {
-            type: Object,
-            required: true,
+        name: {
+            type: String,
+            required: false,
         },
     },
 
+    data () {
+        return {
+            validatedName: null,
+        }
+    },
+
     created () {
-        this.dropdown.name = this.dropdown.name ?? 'dropdown-' + Math.floor(Math.random() * 100000)
+        this.validatedName = this.name ?? 'dropdown-' + Math.floor(Math.random() * 100000)
     },
 
     methods: {
         toggleDropdown () {
-            if (useDropdownStore().getName === this.dropdown.name) {
+            if (useDropdownStore().getName === this.validatedName) {
                 useDropdownStore().setName('')
             } else {
-                useDropdownStore().setName(this.dropdown.name)
+                useDropdownStore().setName(this.validatedName)
             }
 
-            this.$emit('update', useDropdownStore().getName === this.dropdown.name)
+            this.$emit('update', useDropdownStore().getName === this.validatedName)
 
-            if (useDropdownStore().getName === this.dropdown.name) {
+            if (useDropdownStore().getName === this.validatedName) {
                 document.addEventListener('click', this.disableDropdownFromOutsideClick)
             } else {
                 document.removeEventListener('click', this.disableDropdownFromOutsideClick)

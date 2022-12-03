@@ -1,8 +1,8 @@
 <template>
     <button
         @click.stop="modal.active = true"
-        :class="getSize + ' ' + getColorTheme"
-        class="select-none aspect-square rounded-full flex justify-center items-center font-bold border"
+        :class="getSize"
+        class="select-none bg-zinc-800 border border-zinc-500 text-zinc-400 aspect-square rounded-full flex justify-center items-center font-bold"
         title="View all users"
     >
         +{{ amount ?? users.length }}
@@ -66,14 +66,6 @@ export default {
                 default:
                     return 'text-lg h-12'
             }
-        },
-
-        getColorTheme () {
-            if (this.dark) {
-                return 'bg-gray-600 text-white border-gray-700'
-            }
-
-            return 'bg-white text-gray-700 border-gray-300'
         },
 
         getTextSize () {

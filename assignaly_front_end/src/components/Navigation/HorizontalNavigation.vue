@@ -1,19 +1,24 @@
 <template>
     <div
-        class="fixed text-white flex justify-between p-3 border-b border-zinc-700 w-full h-max z-40"
+        class="fixed bg-zinc-900 shadow-lg shadow-zinc-900 text-white flex justify-between p-3 border-b border-zinc-700 w-full h-max z-40"
     >
         <div
             class="flex items-center space-x-8"
         >
-            <assignaly-logo
-                class="h-8 fill-zinc-50 mr-12"
-            />
+            <router-link
+                :to="{ name: 'dashboard' }"
+                class="mr-12"
+            >
+                <assignaly-logo
+                    class="h-8 fill-zinc-50"
+                />
+            </router-link>
 
             <div
                 @click.stop=""
             >
                 <dropdown-toggler
-                    :dropdown="dropdowns.assignments"
+                    :name="dropdowns.assignments.name"
                     @update="(active) => checkActiveAndFetchAssignmentsIsTrue(active)"
                 >
                     <button
@@ -35,10 +40,10 @@
                     >
                         <router-link
                             :to="{ name: 'assignments.index' }"
-                            class="flex items-center space-x-2 p-2 border hover:text-zinc-300 border-zinc-600"
+                            class="rounded-md flex items-center space-x-2 p-2 border hover:text-zinc-300 border-zinc-600"
                         >
                             <hero-icon
-                                name="AcademicCap"
+                                name="PuzzlePiece"
                                 class="h-5"
                                 variant="mini"
                             />
@@ -58,7 +63,7 @@
                             v-for="assignment, key in latestAssignments"
                             :to="{ name: 'assignments.detail', params: { id: assignment.id } }"
                             :key="key"
-                            class="flex w-full justify-between p-4 border border-b-0 last:border-b border-zinc-600 hover:text-zinc-300"
+                            class="flex w-full justify-between first:rounded-t-md last:rounded-b-md p-4 border border-b-0 last:border-b border-zinc-600 hover:text-zinc-300"
                         >
                             <p class="truncate w-56">{{ assignment.title }}</p>
                             <assignment-status
@@ -74,7 +79,7 @@
             @click.stop=""
         >
             <dropdown-toggler
-                :dropdown="dropdowns.user"
+                :name="dropdowns.user.name"
             >
                 <button>
                     <user-icon

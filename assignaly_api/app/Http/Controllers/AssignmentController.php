@@ -13,7 +13,7 @@ class AssignmentController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $assignments = Auth()->user()->ownedAssignments()->paginate();
+        $assignments = Auth()->user()->ownedAssignments()->orderByDesc('created_at')->paginate();
 
         return AssignmentResource::collection($assignments);
     }

@@ -2,21 +2,21 @@
     <div
         v-if="active"
         @click.stop="toggleModal"
-        class="z-40 cursor-pointer bg-black bg-opacity-25 absolute w-screen h-screen top-0 left-0 flex justify-center items-center"
+        class="z-40 fixed cursor-pointer bg-black/60 w-screen h-screen top-0 left-0 flex justify-center items-center"
     >
         <div
-            class="cursor-default shadow-lg bg-white p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
+            class="cursor-default shadow-md shadow-black/40 rounded-md bg-zinc-900 border border-zinc-700 p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
         >
             <div
                 @click.stop=""
-                class="text-lg text-center"
+                class="text-lg text-center select-none"
             >
                 <slot name="title" />
             </div>
 
             <div
                 @click.stop=""
-                class="text-xs text-center text-gray-500 font-medium border-b pb-2 mb-2"
+                class="text-xs text-center text-zinc-400 font-medium border-b border-zinc-700 pb-2 mb-2 select-none"
             >
                 <slot name="desc" />
             </div>
@@ -28,7 +28,7 @@
             </div>
 
             <div
-                class="flex justify-end space-x-2 border-t pt-2 mt-2"
+                class="flex justify-end space-x-2 border-t border-zinc-700 pt-2 mt-2"
                 v-if="this.$slots.actions"
                 @click.stop=""
             >
@@ -51,8 +51,17 @@ export default {
 
     methods: {
         toggleModal () {
-            console.log('sadge')
             this.$emit('close')
+        },
+    },
+
+    watch: {
+        active (to) {
+            if (to) {
+                document.body.style.overflowY = 'hidden'
+            } else {
+                document.body.style.overflowY = 'scroll'
+            }
         },
     },
 }

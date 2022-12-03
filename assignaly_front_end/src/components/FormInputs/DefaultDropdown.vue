@@ -3,33 +3,36 @@
         class="flex relative flex-col w-32"
         @click.prevent.stop=""
     >
-        <button
-            class="group h-full w-full text-center flex items-center border border-gray-300 bg-gray-50 text-sm hover:bg-gray-100"
-            @click="toggleMenu"
+        <dropdown-toggler
+            :name="name"
         >
-            <span
-                class="py-1.5 px-4 w-full"
+            <button
+                class="rounded-md group h-full w-full text-center flex items-center border border-zinc-600 bg-zinc-800 text-sm hover:bg-zinc-800/30"
             >
-                {{ getDefault }}
-            </span>
-            <span
-                class="bg-gray-100 flex items-center justify-center border-l h-full group-hover:bg-gray-200"
-            >
-                <hero-icons
-                    name="ChevronDown"
-                    class="h-3 px-1"
-                    :class="{ 'rotate-180': this.active }"
-                />
-            </span>
-        </button>
+                <span
+                    class="py-1.5 px-4 w-full"
+                >
+                    {{ getDefault }}
+                </span>
+                <span
+                    class="rounded-r-md flex items-center justify-center border-l border-zinc-600 h-full"
+                >
+                    <hero-icons
+                        name="ChevronDown"
+                        class="h-3 px-1"
+                        :class="{ 'rotate-180': this.active }"
+                    />
+                </span>
+            </button>
+        </dropdown-toggler>
         <div
-            class="absolute top-8 max-h-48 overflow-y-scroll w-full bg-white border-x border-t"
+            class="absolute top-8 max-h-48 overflow-y-scroll w-full bg-zinc-900 shadow-md shadow-900/50 border-x border-t border-zinc-600 rounded-md"
             v-if="active"
         >
             <button
                 v-for="option, i in options"
                 :key="i"
-                class="w-full hover:bg-gray-50 text-center py-2 px-4 min-w-max text-sm bg-white border-b"
+                class="w-full hover:bg-zinc-800/30 text-center py-2 px-4 min-w-max text-sm bg-zinc-800 border-b border-zinc-600 rounded-none first:rounded-t-md last:rounded-b-md"
                 @click="emitOption(option)"
             >
                 {{ option.label }}
@@ -40,17 +43,26 @@
 
 <script>
 import HeroIcons from './../HeroIcon.vue'
+import DropdownToggler from './../DropdownToggler.vue'
+import { useDropdownStore, } from './../../stores/dropdown.js'
 
 export default {
 
     components: {
         HeroIcons,
+        DropdownToggler,
     },
 
     data () {
         return {
             active: false,
         }
+    },
+
+    mounted () {
+        const dropdownStore = useDropdownStore()
+
+        dropdownStore.$subscribe((_, state) => this.setActive(state))
     },
 
     props: {
@@ -62,6 +74,11 @@ export default {
         default: {
             type: Object, String, Number,
         },
+
+        name: {
+            type: String,
+            required: true,
+        },
     },
 
     computed: {
@@ -71,19 +88,13 @@ export default {
     },
 
     methods: {
-        emitOption (option) {
-            this.toggleMenu()
-            this.$emit('update', option)
+        setActive (state) {
+            this.active = state.name === this.name
         },
 
-        toggleMenu () {
-            this.active = !this.active
-
-            if (this.active) {
-                document.addEventListener('click', this.toggleMenu)
-            } else {
-                document.removeEventListener('click', this.toggleMenu)
-            }
+        emitOption (option) {
+            useDropdownStore().setName('')
+            this.$emit('update', option)
         },
     },
 }

@@ -1,13 +1,40 @@
 <template>
     <section
         v-if="loggedIn"
-        class="flex h-full w-full"
+        class="relative min-h-screen flex flex-col"
     >
         <horizontal-navigation />
+
         <div
-            class="pt-12"
+            class="pt-20 pb-6 px-6 w-full"
         >
+            <router-view
+                class="text-zinc-200"
+            />
         </div>
+
+        <footer
+            class="text-zinc-600 mt-auto bg-zinc-900 border-t border-zinc-700 w-full p-6"
+        >
+            <p>
+                &copy; Beau Jean van Bemmel, {{ getYear }}
+            </p>
+            <ul
+                class="flex space-x-4 mt-4"
+            >
+                <li
+                    v-for="route, key in footer.routes"
+                    :key="key"
+                >
+                    <router-link
+                        class="text-zinc-500 underline hover:no-underline"
+                        :to="{ name: route.name }"
+                    >
+                        {{ route.label }}
+                    </router-link>
+                </li>
+            </ul>
+        </footer>
     </section>
 
     <section
@@ -28,11 +55,44 @@ export default {
         HorizontalNavigation,
     },
 
+    data () {
+        return {
+            footer: {
+                routes: [
+                    {
+                        name: 'dashboard',
+                        label: 'Dashboard',
+                    },
+                    {
+                        name: 'assignments.index',
+                        label: 'Assignments',
+                    },
+                    {
+                        name: 'classrooms.index',
+                        label: 'Classrooms',
+                    },
+                    {
+                        name: '404',
+                        label: 'Privacy policy',
+                    },
+                ],
+            },
+        }
+    },
+
     computed: {
         loggedIn () {
             const user = useUserStore()
 
             return user.getToken !== null
+        },
+
+        getYear () {
+            const DATE = new Date()
+            const CURRENT_YEAR = DATE.getFullYear()
+            const ORIGINAL_YEAR_MADE = 2022
+
+            return CURRENT_YEAR === ORIGINAL_YEAR_MADE ? CURRENT_YEAR : ORIGINAL_YEAR_MADE + ' - ' + CURRENT_YEAR
         },
     },
 }

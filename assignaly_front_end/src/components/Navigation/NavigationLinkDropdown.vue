@@ -1,7 +1,7 @@
 <template>
     <div
         :class="isActive ? 'h-max w-96 text-full border p-2 opacity-100' : 'h-0 w-0 text-[0%] p-0 opacity-0'"
-        class="absolute transition-all duration-100 overflow-hidden flex flex-col top-14 bg-zinc-800 border-zinc-700"
+        class="rounded-md absolute transition-all duration-100 overflow-hidden flex flex-col top-14 bg-zinc-800 border-zinc-700 shadow-md shadow-zinc-900"
     >
         <slot />
     </div>

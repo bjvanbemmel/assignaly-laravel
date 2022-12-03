@@ -1,7 +1,7 @@
 <template>
     <div
         :class="isActive ? 'h-max w-64 text-full py-2 border opacity-100' : 'h-0 w-0 text-[0%] py-0 opacity-0'"
-        class="absolute duration-100 px-2 transition-all flex flex-col overflow-hidden top-14 right-0 border-zinc-700 bg-zinc-800"
+        class="rounded-md absolute duration-100 px-2 transition-all flex flex-col overflow-hidden top-14 right-0 border-zinc-700 bg-zinc-800 shadow-md shadow-zinc-900"
     >
         <div
             v-if="isActive"
@@ -40,7 +40,7 @@
             <router-link
                 v-for="route, key in routes"
                 :key="key"
-                class="flex items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
+                class="flex first:rounded-t-md last:rounded-b-md items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
                 :to="{ name: route.name }"
             >
                 <hero-icon

@@ -1,28 +1,29 @@
 <template>
     <div
-        class="p-4 bg-gray-50 border"
+        class="rounded-md p-6 bg-zinc-800 border border-zinc-800 shadow-md shadow-black/30"
     >
         <hero-icon
-            v-if="!assignment"
+            v-if="loading"
             name="ArrowPath"
-            class="m-auto h-8 text-gray-400 animate-spin"
+            class="m-auto h-8 text-zinc-500 animate-spin"
         />
         <div
             v-else
         >
-            <h1 class="border-b border-gray-300 mb-2 pb-2 text-lg font-semibold"> {{ assignment.title }} </h1>
+            <h1 class="border-b border-zinc-600 mb-2 pb-2 text-lg font-semibold"> {{ assignment.title }} </h1>
             <div
-                class="mt-4 text-sm bg-white border p-2"
+                class="mt-4 text-sm bg-zinc-800 border border-zinc-600 p-2"
             >
                 {{ assignment.description }}
             </div>
             {{ assignment.status }}
             <div
-                class="flex space-x-2 bg-gray-100 border-b mt-4 p-2"
+                class="flex space-x-2 bg-zinc-900/50 border-b border-zinc-600 mt-4 p-2"
             >
                 <default-dropdown
                     :options="dropdownOptions"
                     :default="dropdownSelected"
+                    name="assignment-status-dropdown"
                     @update="(option) => dropdownStatusUpdate(option)"
                 />
                 <default-button
@@ -48,7 +49,7 @@
             </template>
 
             <template v-slot:content>
-                <div class="w-full text-center">
+                <div class="w-full text-center p-2">
                     <p>Are you sure you wish to permanently delete this assignment?</p>
                     <p>Assigned users will be notified.</p>
                     <p class="text-red-600 font-bold">This action is irreversible.</p>
@@ -96,6 +97,8 @@ export default {
             modal: {
                 active: false,
             },
+
+            loading: false,
 
             dropdownSelected: null,
             dropdownOptions: [
@@ -152,6 +155,12 @@ export default {
             this.toggleDeletionModal()
 
             this.deleteAssignment()
+        },
+    },
+
+    watch: {
+        '$route.params' () {
+            this.fetchData()
         },
     },
 
