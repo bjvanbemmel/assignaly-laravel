@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { useDropdownStore } from './../stores/dropdown.js'
+import { useDropdownStore, } from './../stores/dropdown.js'
 
 export default {
 
@@ -16,6 +16,10 @@ export default {
             type: Object,
             required: true,
         },
+    },
+
+    created () {
+        this.dropdown.name = this.dropdown.name ?? 'dropdown-' + Math.floor(Math.random() * 100000)
     },
 
     methods: {
@@ -38,6 +42,7 @@ export default {
         disableDropdownFromOutsideClick () {
             useDropdownStore().setName('')
             this.$emit('update', false)
+
             document.removeEventListener('click', this.disableDropdownFromOutsideClick)
         },
     },

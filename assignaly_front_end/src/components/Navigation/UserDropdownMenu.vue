@@ -57,7 +57,7 @@
 <script>
 import UserIcon from './../UserIcon.vue'
 import HeroIcon from './../HeroIcon.vue'
-import { useDropdownStore } from './../../stores/dropdown.js'
+import { useDropdownStore, } from './../../stores/dropdown.js'
 
 export default {
 
@@ -110,7 +110,7 @@ export default {
     methods: {
         setIsActive (state) {
             this.isActive = state.name === this.name
-        }
+        },
     },
 
 }

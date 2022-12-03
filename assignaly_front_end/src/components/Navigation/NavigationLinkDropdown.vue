@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { useDropdownStore } from './../../stores/dropdown.js'
+import { useDropdownStore, } from './../../stores/dropdown.js'
 
 export default {
 
@@ -29,7 +29,7 @@ export default {
             type: Boolean,
             default: false,
         },
-        
+
         name: {
             type: String,
             required: true,
@@ -39,7 +39,7 @@ export default {
     methods: {
         setIsActive (state) {
             this.isActive = state.name === this.name
-        }
+        },
     },
 }
 </script>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, } from 'vue-router'
 
 // Store
 import { useUserStore, } from '../stores/user.js'
+import { useDropdownStore, } from '../stores/dropdown.js'
 
 // Views
 import Login from '@/views/authentication/Login.vue'
@@ -82,6 +83,8 @@ const router = createRouter({
 router.beforeResolve(async (to, _, next) => {
     const user = useUserStore()
     user.setToken(user.getToken)
+
+    useDropdownStore().setName('')
 
     validateUser()
 
