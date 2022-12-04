@@ -39,6 +39,7 @@ export default {
     methods: {
         setIsActive (state) {
             this.isActive = state.name === this.name
+            this.$emit('update:active', this.isActive)
         },
     },
 }

@@ -11,11 +11,12 @@
                 type="text"
                 placeholder="Click me or press '/' to search..."
                 class="rounded-md placeholder:text-zinc-500 border border-zinc-600 bg-zinc-800 px-2 py-1.5 w-96 focus:outline-none  ring-zinc-600 focus:ring-2"
-                @focus.stop="setDropdownName"
+                @keyup.esc="closeOnEscape"
             />
             <div
                 class="absolute w-96 top-12 rounded-md p-4 bg-zinc-800 border-zinc-600 border"
                 v-if="active"
+                @click.stop
             >
                 <hero-icon
                     v-if="!results"
@@ -43,6 +44,8 @@
                         >
                             <user-icon
                                 :user="user"
+                                class="hover:cursor-pointer"
+                                size="sm"
                             />
                             <p v-html="getHighlightedText(user.name)" class="truncate w-64"></p>
                         </router-link>

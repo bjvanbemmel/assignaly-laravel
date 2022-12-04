@@ -23,7 +23,6 @@
                 >
                     <button
                         class="flex items-center space-x-1 hover:underline"
-                        @focus="setAssignmentDropdownActiveOnFocus"
                     >
                         <p>Assignments</p>
                         <hero-icon
@@ -35,9 +34,11 @@
                 </dropdown-toggler>
                 <navigation-link-dropdown
                     :name="dropdowns.assignments.name"
+                    @update:active="(active) => checkActiveAndFetchAssignmentsIsTrue(active)"
                 >
                     <div
                         class="pb-2 mb-2 border-b border-b-zinc-700"
+                        v-if="dropdowns.assignments.active"
                     >
                         <router-link
                             :to="{ name: 'assignments.index' }"
@@ -53,6 +54,7 @@
                     </div>
                     <div
                         class="flex flex-col"
+                        v-if="dropdowns.assignments.active"
                     >
                         <hero-icon
                             v-if="dropdowns.assignments.loading"
@@ -179,6 +181,8 @@ export default {
             if (active) {
                 this.fetchLatestAssignments()
             }
+
+            this.dropdowns.assignments.active = active
         },
 
         fetchLatestAssignments () {

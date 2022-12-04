@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded-md p-6 bg-zinc-800 border border-zinc-800 shadow-md shadow-black/30">
+    <button class="rounded-md p-6 bg-zinc-800 text-start border border-zinc-800 shadow-md shadow-black/30">
         <div class="flex justify-between">
             <h1 class="text-lg font-bold w-[32rem] truncate"> {{ assignment.title }} </h1>
             <div class="flex space-x-[-0.33rem]">
@@ -76,7 +76,7 @@
             </template>
 
         </modal>
-    </div>
+    </button>
 </template>
 
 <script>

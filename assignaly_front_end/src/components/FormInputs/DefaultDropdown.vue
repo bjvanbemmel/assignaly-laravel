@@ -32,7 +32,7 @@
             <button
                 v-for="option, i in options"
                 :key="i"
-                class="w-full hover:bg-zinc-800/30 text-center py-2 px-4 min-w-max text-sm bg-zinc-800 border-b border-zinc-600 rounded-none first:rounded-t-md last:rounded-b-md"
+                class="w-full hover:bg-zinc-800/30 focus:bg-zinc-800/30 text-center focus:outline-none py-2 px-4 min-w-max text-sm bg-zinc-800 border-b border-zinc-600 rounded-none first:rounded-t-md last:rounded-b-md"
                 @click="emitOption(option)"
             >
                 {{ option.label }}
