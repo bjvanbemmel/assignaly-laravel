@@ -50,8 +50,14 @@ export default {
     },
 
     methods: {
-        toggleModal () {
+        closeModal () {
             this.$emit('close')
+        },
+
+        closeModalOnKeyUp (event) {
+            if (event.key === 'Escape') {
+                this.closeModal()
+            }
         },
     },
 
@@ -59,8 +65,10 @@ export default {
         active (to) {
             if (to) {
                 document.body.style.overflowY = 'hidden'
+                document.addEventListener('keyup', this.closeModalOnKeyUp)
             } else {
                 document.body.style.overflowY = 'scroll'
+                document.removeEventListener('keyup', this.closeModalOnKeyUp)
             }
         },
     },

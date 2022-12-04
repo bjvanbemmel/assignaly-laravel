@@ -46,7 +46,6 @@ export default {
         },
 
         disableDropdownFromOutsideClick () {
-            console.log('toggler')
             useDropdownStore().setName('')
             this.$emit('update', false)
 

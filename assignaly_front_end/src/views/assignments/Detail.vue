@@ -23,7 +23,6 @@
                 {{ assignment.description }}
             </div>
 
-
             <div
                 class="flex space-x-2 bg-zinc-900/50 border-b border-zinc-600 mt-4 p-2"
             >
@@ -46,6 +45,7 @@
         <modal
             :active="modal.active"
             @click.stop="() => toggleDeletionModal()"
+            @close="() => toggleDeletionModal()"
         >
             <template v-slot:title>
                 Delete assignment

@@ -41,7 +41,7 @@
 
     <section
         v-else
-        class="h-full overflow-y-scroll"
+        class="text-zinc-200"
     >
         <router-view />
     </section>

@@ -7,7 +7,7 @@
             :name="name"
         >
             <button
-                class="rounded-md group h-full w-full text-center flex items-center border border-zinc-600 bg-zinc-800 text-sm hover:bg-zinc-800/30"
+                class="rounded-md focus:outline-none ring-zinc-600 focus:ring-2 group h-full w-full text-center flex items-center border border-zinc-600 bg-zinc-800 text-sm hover:bg-zinc-800/30"
             >
                 <span
                     class="py-1.5 px-4 w-full"

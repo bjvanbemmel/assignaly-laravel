@@ -38,18 +38,28 @@
             class="flex flex-col"
         >
             <router-link
-                v-for="route, key in routes"
-                :key="key"
                 class="flex first:rounded-t-md last:rounded-b-md items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
-                :to="{ name: route.name }"
+                :to="{ name: 'user.settings' }"
             >
                 <hero-icon
                     class="h-5"
                     variant="mini"
-                    :name="route.icon"
+                    name="Cog6Tooth"
                 />
-                <p> {{ route.label }} </p>
+                <p>Account settings</p>
             </router-link>
+
+            <button
+                class="flex first:rounded-t-md last:rounded-b-md items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
+                @click.prevent="logout"
+            >
+                <hero-icon
+                    class="h-5"
+                    variant="mini"
+                    name="ArrowRightOnRectangle"
+                />
+                <p>Logout</p>
+            </button>
         </div>
     </div>
 </template>
@@ -58,6 +68,8 @@
 import UserIcon from './../UserIcon.vue'
 import HeroIcon from './../HeroIcon.vue'
 import { useDropdownStore, } from './../../stores/dropdown.js'
+import { useUserStore, } from './../../stores/user.js'
+import axios from 'axios'
 
 export default {
 
@@ -110,6 +122,14 @@ export default {
     methods: {
         setIsActive (state) {
             this.isActive = state.name === this.name
+        },
+
+        logout () {
+            axios.post('/auth/logout')
+                .then(() => {
+                    useUserStore().setToken(null)
+                    this.$router.push('authentication.login')
+                })
         },
     },
 

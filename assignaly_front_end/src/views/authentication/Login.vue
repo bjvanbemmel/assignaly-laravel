@@ -1,40 +1,62 @@
 <template>
-    <div class="w-full h-full flex justify-center items-center">
+    <div class="w-full h-screen flex flex-col space-y-4 justify-center items-center">
+        <assignaly-logo-full-width
+            class="h-16 fill-zinc-200"
+        />
         <form
-            class="w-96 bg-gray-500 flex flex-col p-8"
+            class="w-96 bg-zinc-800/50 gap-4 rounded-md border-zinc-600 border shadow-md shadow-zinc-900 flex flex-col p-8"
             @submit.prevent="login"
         >
-            <input
-                class="my-4"
-                type="email"
+            <div
+                v-if="error"
+                class="text-red-100 font-semibold bg-red-800 border-red-600 border-2 rounded-md px-2 py-1"
+            >
+                {{ error }}
+            </div>
+            <default-text-input
+                placeholder="E-mail"
                 name="email"
-                v-model="email"
-            >
-            <input
-                class="my-4"
-                type="password"
-                name="password"
-                v-model="password"
-            >
+                type="email"
+                autocomplete="email"
+                @update="(email) => this.email = email"
+            />
 
-            <input
-                type="submit"
-                value="Login"
-            >
+            <default-text-input
+                placeholder="Password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                @update="(password) => this.password = password"
+            />
+
+            <default-button
+                text="Login"
+                class="mt-4"
+            />
         </form>
     </div>
 </template>
 
 <script>
+import AssignalyLogoFullWidth from './../../components/AssignalyLogoFullWidth.vue'
+import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
+import DefaultTextInput from './../../components/FormInputs/DefaultTextInput.vue'
 import axios from 'axios'
 import { useUserStore, } from '../../stores/user.js'
 
 export default {
 
+    components: {
+        AssignalyLogoFullWidth,
+        DefaultButton,
+        DefaultTextInput,
+    },
+
     data () {
         return {
             email: '',
             password: '',
+            error: null,
         }
     },
 
@@ -49,10 +71,10 @@ export default {
 
                     user.setToken(res.data.token)
                     user.setData(res.data.user)
-                    this.$router.push({ name: 'assignments.index', })
+                    this.$router.push({ name: 'dashboard', })
                 })
-                .catch((res) => {
-                    console.log(res)
+                .catch(() => {
+                    this.error = "Invalid credentials."
                 })
         },
     },

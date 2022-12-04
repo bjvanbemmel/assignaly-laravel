@@ -25,14 +25,6 @@ const router = createRouter({
             },
         },
         {
-            path: '/logout',
-            name: 'authentication.logout',
-            component: Login,
-            meta: {
-                indexed: false,
-            },
-        },
-        {
             path: '/page-not-found',
             name: '404',
             component: PageNotFound,

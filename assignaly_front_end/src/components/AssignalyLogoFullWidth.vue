@@ -1,8 +1,7 @@
 <template>
     <svg
         :class="this.class"
-        class="select-none"
-        viewBox="0 0 500 500"
+        viewBox="0 0 1947 600"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:bx="https://boxy-svg.com"
     >
@@ -11,7 +10,7 @@
             x="100.284"
             y="466.728"
         >
-            A
+            Assignaly
         </text>
         <path
             fill-rule="evenodd"
@@ -24,7 +23,6 @@
 
 <script>
 export default {
-
     props: {
         class: {
             type: String,

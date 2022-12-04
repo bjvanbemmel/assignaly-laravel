@@ -8,6 +8,7 @@
             <input
                 v-model="query"
                 ref="globalSearch"
+                maxlength="255"
                 type="text"
                 placeholder="Click me or press '/' to search..."
                 class="rounded-md placeholder:text-zinc-500 border border-zinc-600 bg-zinc-800 px-2 py-1.5 w-96 focus:outline-none  ring-zinc-600 focus:ring-2"
@@ -133,13 +134,17 @@ export default {
 
         closeOnEscape () {
             this.$refs.globalSearch.blur()
-            this.setName('')
+            useDropdownStore().setName('')
         },
 
         submitQuery: debounce(function () {
             this.results = null
 
             if (!/[a-z0-9]/gi.test(this.query)) {
+                return
+            }
+
+            if (this.query.length > 255) {
                 return
             }
 

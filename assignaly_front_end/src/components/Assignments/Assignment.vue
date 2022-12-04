@@ -35,6 +35,7 @@
         <modal
             :active="modal.active"
             @close="() => toggleModal()"
+            @click.stop="() => toggleModal()"
         >
             <template v-slot:title>
                 Users

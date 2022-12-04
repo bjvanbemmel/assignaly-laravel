@@ -1,6 +1,6 @@
 <template>
     <button
-        class="text-center border border-zinc-600 rounded-md bg-zinc-800 py-1.5 px-4 text-sm hover:bg-zinc-800/30"
+        class="focus:outline-none ring-zinc-600 focus:ring-2 bg-zinc-800 text-zinc-200 hover:bg-zinc-800/30 focus:bg-zinc-800/30 border border-zinc-700 rounded-md px-2 py-1 placeholder-zinc-300/700"
     >
         {{ text }}
     </button>
