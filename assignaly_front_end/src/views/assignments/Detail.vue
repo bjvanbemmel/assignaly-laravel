@@ -10,13 +10,20 @@
         <div
             v-else
         >
-            <h1 class="border-b border-zinc-600 mb-2 pb-2 text-lg font-semibold"> {{ assignment.title }} </h1>
+            <h1 class="border-b border-zinc-600 mb-2 pb-2 text-lg font-semibold">
+                {{ assignment.title }}
+                <assignment-status
+                    :status="assignment.status"
+                    class="my-2"
+                />
+            </h1>
             <div
                 class="mt-4 text-sm bg-zinc-800 border border-zinc-600 p-2"
             >
                 {{ assignment.description }}
             </div>
-            {{ assignment.status }}
+
+
             <div
                 class="flex space-x-2 bg-zinc-900/50 border-b border-zinc-600 mt-4 p-2"
             >
@@ -75,6 +82,7 @@
 import HeroIcon from './../../components/HeroIcon.vue'
 import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
 import DefaultDropdown from './../../components/FormInputs/DefaultDropdown.vue'
+import AssignmentStatus from './../../components/Assignments/AssignmentStatus.vue'
 import Modal from './../../components/Modal.vue'
 import axios from 'axios'
 import { useDropdownStore, } from '../../stores/dropdown.js'
@@ -85,6 +93,7 @@ export default {
         HeroIcon,
         DefaultButton,
         DefaultDropdown,
+        AssignmentStatus,
         Modal,
     },
 

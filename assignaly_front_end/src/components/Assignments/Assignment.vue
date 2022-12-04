@@ -27,6 +27,11 @@
             <h3> <span class="font-semibold"> Due at: </span> {{ assignment.due_at }} </h3>
         </div>
 
+        <assignment-status
+            :status="assignment.status"
+            class="mt-2"
+        />
+
         <modal
             :active="modal.active"
             @close="() => toggleModal()"
@@ -84,6 +89,7 @@
 import UserIcon from './../../components/UserIcon.vue'
 import UserIconOverflow from './../../components/UserIconOverflow.vue'
 import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
+import AssignmentStatus from './AssignmentStatus.vue'
 import Modal from './../../components/Modal.vue'
 
 export default {
@@ -92,6 +98,7 @@ export default {
         UserIcon,
         UserIconOverflow,
         DefaultButton,
+        AssignmentStatus,
         Modal,
     },
 
