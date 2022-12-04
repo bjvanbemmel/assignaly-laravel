@@ -90,24 +90,27 @@
         </div>
 
         <div
-            @click.stop=""
             class="w-96 flex justify-end"
         >
-            <dropdown-toggler
-                :name="dropdowns.user.name"
+            <div
+                @click.stop
             >
-                <button>
-                    <user-icon
-                        :user="user"
-                        size="sm"
-                        class="hover:cursor-pointer"
-                    />
-                </button>
-            </dropdown-toggler>
-            <user-dropdown-menu
-                :user="user"
-                :name="dropdowns.user.name"
-            />
+                <dropdown-toggler
+                    :name="dropdowns.user.name"
+                >
+                    <button>
+                        <user-icon
+                            :user="user"
+                            size="sm"
+                            class="hover:cursor-pointer"
+                        />
+                    </button>
+                </dropdown-toggler>
+                <user-dropdown-menu
+                    :user="user"
+                    :name="dropdowns.user.name"
+                />
+            </div>
         </div>
     </nav>
 </template>
