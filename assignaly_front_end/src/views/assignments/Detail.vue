@@ -77,7 +77,7 @@ import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
 import DefaultDropdown from './../../components/FormInputs/DefaultDropdown.vue'
 import Modal from './../../components/Modal.vue'
 import axios from 'axios'
-import { useDropdownStore } from '../../stores/dropdown.js'
+import { useDropdownStore, } from '../../stores/dropdown.js'
 
 export default {
 

@@ -1,9 +1,9 @@
 <template>
-    <div
+    <nav
         class="fixed items-center bg-zinc-900 shadow-lg shadow-zinc-900 text-white flex justify-between p-2 border-b border-zinc-700 w-full h-max z-40"
     >
         <div
-            class="flex items-center space-x-8 w-64"
+            class="flex items-center space-x-8 w-96"
         >
             <router-link
                 :to="{ name: 'dashboard' }"
@@ -13,6 +13,13 @@
                     class="h-8 fill-zinc-50"
                 />
             </router-link>
+
+            <button
+                class="absolute opacity-0 -z-50 focus:z-40 focus:static focus:opacity-100 border-2 border-zinc-300 rounded-md px-2"
+                @click.stop="skipNavigation"
+            >
+                Skip navigation
+            </button>
 
             <div
                 @click.stop=""
@@ -84,7 +91,7 @@
 
         <div
             @click.stop=""
-            class="w-64 flex justify-end"
+            class="w-96 flex justify-end"
         >
             <dropdown-toggler
                 :name="dropdowns.user.name"
@@ -102,7 +109,7 @@
                 :name="dropdowns.user.name"
             />
         </div>
-    </div>
+    </nav>
 </template>
 
 <script>
@@ -197,6 +204,11 @@ export default {
 
         closeAllDropdownsOnClick () {
             useDropdownStore().setName('')
+        },
+
+        skipNavigation () {
+            useDropdownStore().setName('')
+            this.$root.$refs.mainWrapperRouterView.focus()
         },
     },
 }

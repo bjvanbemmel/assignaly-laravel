@@ -47,16 +47,22 @@
                                 class="hover:cursor-pointer"
                                 size="sm"
                             />
-                            <p v-html="getHighlightedText(user.name)" class="truncate w-64"></p>
+                            <p
+                                v-html="getHighlightedText(user.name)"
+                                class="truncate w-64"
+                            ></p>
                         </router-link>
                         <router-link
                             v-for="assignment, key in results.assignments"
                             @click.stop="closeOnEscape"
                             :key="key"
-                            :to="{ name: 'assignments.detail', params: {id: assignment.id } }"
+                            :to="{ name: 'assignments.detail', params: { id: assignment.id } }"
                             class="flex w-full gap-4 items-center first:rounded-t-md last:rounded-b-md p-4 border border-b-0 last:border-b border-zinc-600 hover:text-zinc-300"
                         >
-                            <p v-html="getHighlightedText(assignment.title)" class="truncate w-64"></p>
+                            <p
+                                v-html="getHighlightedText(assignment.title)"
+                                class="truncate w-64"
+                            ></p>
                         </router-link>
                     </div>
                 </div>
@@ -69,9 +75,9 @@
 import HeroIcon from '../HeroIcon.vue'
 import UserIcon from '../UserIcon.vue'
 import DropdownToggler from '../DropdownToggler.vue'
-import { debounce } from 'lodash'
+import { debounce, } from 'lodash'
 import axios from 'axios'
-import { useDropdownStore } from '../../stores/dropdown.js'
+import { useDropdownStore, } from '../../stores/dropdown.js'
 
 export default {
 
@@ -98,7 +104,7 @@ export default {
             tabIndex: 1,
         }
     },
-    
+
     methods: {
         setActive (state) {
             this.active = state.name === this.name
@@ -119,7 +125,7 @@ export default {
         },
 
         getHighlightedText (text) {
-            return text.replace(new RegExp(this.query, "gi"), (match) => {
+            return text.replace(new RegExp(this.query, 'gi'), (match) => {
                 return '<span class="font-bold">' + match + '</span>'
             })
         },

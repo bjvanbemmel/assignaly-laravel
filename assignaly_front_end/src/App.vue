@@ -5,13 +5,15 @@
     >
         <horizontal-navigation />
 
-        <div
-            class="pt-20 pb-6 px-6 w-full"
+        <main
+            class="focus:outline-none pt-20 pb-6 px-6 w-full"
+            tabindex="-1"
+            ref="mainWrapperRouterView"
         >
             <router-view
                 class="text-zinc-200"
             />
-        </div>
+        </main>
 
         <footer
             class="text-zinc-600 mt-auto bg-zinc-900 border-t border-zinc-700 w-full p-6"

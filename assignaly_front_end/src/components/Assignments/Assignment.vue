@@ -8,6 +8,7 @@
                     :key="i"
                     size="sm"
                     :user="user"
+                    class="ml-2"
                     hover
                 />
                 <user-icon-overflow
