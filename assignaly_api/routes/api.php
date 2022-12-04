@@ -4,6 +4,7 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/assignments/{assignment}', 'update');
         Route::delete('/assignments/{assignment}', 'destroy');
     });
+
+    Route::get('/search', [SearchController::class, 'search']);
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/validate', [AuthController::class, 'get']);

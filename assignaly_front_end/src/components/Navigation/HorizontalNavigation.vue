@@ -1,9 +1,9 @@
 <template>
     <div
-        class="fixed bg-zinc-900 shadow-lg shadow-zinc-900 text-white flex justify-between p-3 border-b border-zinc-700 w-full h-max z-40"
+        class="fixed items-center bg-zinc-900 shadow-lg shadow-zinc-900 text-white flex justify-between p-2 border-b border-zinc-700 w-full h-max z-40"
     >
         <div
-            class="flex items-center space-x-8"
+            class="flex items-center space-x-8 w-64"
         >
             <router-link
                 :to="{ name: 'dashboard' }"
@@ -23,6 +23,7 @@
                 >
                     <button
                         class="flex items-center space-x-1 hover:underline"
+                        @focus="setAssignmentDropdownActiveOnFocus"
                     >
                         <p>Assignments</p>
                         <hero-icon
@@ -75,8 +76,13 @@
             </div>
         </div>
 
+        <div>
+            <search-box />
+        </div>
+
         <div
             @click.stop=""
+            class="w-64 flex justify-end"
         >
             <dropdown-toggler
                 :name="dropdowns.user.name"
@@ -105,6 +111,7 @@ import UserDropdownMenu from './UserDropdownMenu.vue'
 import NavigationLinkDropdown from './NavigationLinkDropdown.vue'
 import AssignmentStatus from './../Assignments/AssignmentStatus.vue'
 import HeroIcon from './../HeroIcon.vue'
+import SearchBox from './SearchBox.vue'
 import { useUserStore, } from './../../stores/user.js'
 import { useDropdownStore, } from './../../stores/dropdown.js'
 import axios from 'axios'
@@ -119,6 +126,7 @@ export default {
         NavigationLinkDropdown,
         AssignmentStatus,
         HeroIcon,
+        SearchBox,
     },
 
     data () {
@@ -163,6 +171,10 @@ export default {
     },
 
     methods: {
+        setAssignmentDropdownActiveOnFocus () {
+            useDropdownStore().setName(this.dropdowns.assignments.name)
+        },
+
         checkActiveAndFetchAssignmentsIsTrue (active) {
             if (active) {
                 this.fetchLatestAssignments()
