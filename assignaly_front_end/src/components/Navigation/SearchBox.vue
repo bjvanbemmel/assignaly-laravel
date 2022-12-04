@@ -15,7 +15,7 @@
             />
             <div
                 class="absolute w-96 top-12 rounded-md p-4 bg-zinc-800 border-zinc-600 border"
-                v-if="active"
+                v-if="active && query !== ''"
                 @click.stop
             >
                 <hero-icon
@@ -106,22 +106,16 @@ export default {
     },
 
     methods: {
+        setName: debounce(function (name) {
+            if (useDropdownStore().getName === this.name) {
+                return
+            }
+
+            useDropdownStore().setName(name)
+        }, 100),
+
         setActive (state) {
             this.active = state.name === this.name
-        },
-
-        setDropdownName () {
-            useDropdownStore().setName(this.name)
-
-            if (useDropdownStore().getName === this.validatedName) {
-                document.addEventListener('click', this.closeAllDropdowns)
-            } else {
-                document.removeEventListener('click', this.closeAllDropdowns)
-            }
-        },
-
-        closeAllDropdowns () {
-            useDropdownStore().setName('')
         },
 
         getHighlightedText (text) {
@@ -139,11 +133,15 @@ export default {
 
         closeOnEscape () {
             this.$refs.globalSearch.blur()
-            useDropdownStore().setName('')
+            this.setName('')
         },
 
         submitQuery: debounce(function () {
             this.results = null
+
+            if (!/[a-z0-9]/gi.test(this.query)) {
+                return
+            }
 
             axios.get(`/search?query=${this.query}`)
                 .then((res) => {
@@ -154,12 +152,9 @@ export default {
 
     watch: {
         query (to) {
-
-            if (to === '') {
-                useDropdownStore().setName('')
-            } else {
+            if (this.query !== '') {
                 this.submitQuery()
-                useDropdownStore().setName(this.name)
+                this.setName(this.name)
             }
         },
     },
