@@ -26,7 +26,6 @@
             >
                 <dropdown-toggler
                     :name="dropdowns.assignments.name"
-                    @update="(active) => checkActiveAndFetchAssignmentsIsTrue(active)"
                 >
                     <button
                         class="flex items-center space-x-1 hover:underline"
@@ -41,7 +40,7 @@
                 </dropdown-toggler>
                 <navigation-link-dropdown
                     :name="dropdowns.assignments.name"
-                    @update:active="(active) => checkActiveAndFetchAssignmentsIsTrue(active)"
+                    @update:active="(active) => checkActiveAndFetchAssignmentsIfTrue(active)"
                 >
                     <div
                         class="pb-2 mb-2 border-b border-b-zinc-700"
@@ -49,7 +48,7 @@
                     >
                         <router-link
                             :to="{ name: 'assignments.index' }"
-                            class="rounded-md flex items-center space-x-2 p-2 border hover:text-zinc-300 border-zinc-600"
+                            class="flex items-center space-x-2 p-2 border rounded-t-md hover:text-zinc-300 border-zinc-600"
                         >
                             <hero-icon
                                 name="PuzzlePiece"
@@ -57,6 +56,17 @@
                                 variant="mini"
                             />
                             <p>View all assignments</p>
+                        </router-link>
+                        <router-link
+                            :to="{ name: 'assignments.create' }"
+                            class="flex items-center space-x-2 p-2 border rounded-b-md border-t-0 hover:text-zinc-300 border-zinc-600"
+                        >
+                            <hero-icon
+                                name="Plus"
+                                class="h-5"
+                                variant="mini"
+                            />
+                            <p>Create new assignment</p>
                         </router-link>
                     </div>
                     <div
@@ -187,7 +197,7 @@ export default {
             useDropdownStore().setName(this.dropdowns.assignments.name)
         },
 
-        checkActiveAndFetchAssignmentsIsTrue (active) {
+        checkActiveAndFetchAssignmentsIfTrue (active) {
             if (active) {
                 this.fetchLatestAssignments()
             }

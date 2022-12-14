@@ -6,14 +6,18 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(User::query()
+            ->where('name', 'LIKE', "%{$request->input('query')}%")
+            ->get()
+        );
     }
 
     public function store(UserStoreRequest $request): UserResource

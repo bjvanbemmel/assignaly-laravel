@@ -11,6 +11,16 @@
                     class="flex gap-6 h-full z-20"
                 >
                     <section
+                        class="flex items-end"
+                    >
+                            <default-button
+                            :to="{ name: 'assignments.create' }"
+                                text="Create assignment"
+                                class="h-10"
+                            />
+                    </section>
+
+                    <section
                         class="h-10"
                     >
                         <label
@@ -101,6 +111,7 @@ import HeroIcon from '../../components/HeroIcon.vue'
 import Assignment from '../../components/Assignments/Assignment.vue'
 import PageTitle from '../../components/PageTitle.vue'
 import DefaultDropdown from '../../components/FormInputs/DefaultDropdown.vue'
+import DefaultButton from '../../components/FormInputs/DefaultButton.vue'
 import axios from 'axios'
 import _ from 'lodash'
 
@@ -111,6 +122,7 @@ export default {
         Assignment,
         PageTitle,
         DefaultDropdown,
+        DefaultButton,
     },
 
     mounted () {

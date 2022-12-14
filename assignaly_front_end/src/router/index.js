@@ -10,6 +10,7 @@ import PageNotFound from '@/views/pagenotfound/Index.vue'
 import Dashboard from '@/views/dashboard/Index.vue'
 import Assignments from '@/views/assignments/Index.vue'
 import Assignment from '@/views/assignments/Detail.vue'
+import AssignmentCreate from '@/views/assignments/Create.vue'
 import Classrooms from '@/views/classrooms/Index.vue'
 import axios from 'axios'
 
@@ -54,6 +55,15 @@ const router = createRouter({
             path: '/assignments/:id',
             name: 'assignments.detail',
             component: Assignment,
+            meta: {
+                indexed: false,
+                label: 'Assignments',
+            },
+        },
+        {
+            path: '/assignments/create',
+            name: 'assignments.create',
+            component: AssignmentCreate,
             meta: {
                 indexed: false,
                 label: 'Assignments',
