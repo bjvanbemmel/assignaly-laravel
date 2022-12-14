@@ -86,7 +86,7 @@
         </div>
 
         <div>
-            <search-box />
+            <global-search />
         </div>
 
         <div
@@ -123,7 +123,7 @@ import UserDropdownMenu from './UserDropdownMenu.vue'
 import NavigationLinkDropdown from './NavigationLinkDropdown.vue'
 import AssignmentStatus from './../Assignments/AssignmentStatus.vue'
 import HeroIcon from './../HeroIcon.vue'
-import SearchBox from './SearchBox.vue'
+import GlobalSearch from './GlobalSearch.vue'
 import { useUserStore, } from './../../stores/user.js'
 import { useDropdownStore, } from './../../stores/dropdown.js'
 import axios from 'axios'
@@ -138,7 +138,7 @@ export default {
         NavigationLinkDropdown,
         AssignmentStatus,
         HeroIcon,
-        SearchBox,
+        GlobalSearch,
     },
 
     data () {

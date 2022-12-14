@@ -6,21 +6,27 @@ use App\Http\Requests\AssignmentStoreRequest;
 use App\Http\Requests\AssignmentUpdateRequest;
 use App\Http\Resources\AssignmentResource;
 use App\Models\Assignment;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class AssignmentController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $assignments = Auth()->user()->ownedAssignments()->orderByDesc('created_at')->paginate();
+        $assignments = Auth()->user()->ownedAssignments()
+            ->orderByDesc($request->input('orderBy') ?? 'created_at')
+            ->paginate(perPage: $request->input('perPage') ?? 30);
 
         return AssignmentResource::collection($assignments);
     }
 
     public function latest(): AnonymousResourceCollection
     {
-        $assignments = Auth::user()->ownedAssignments()->orderByDesc('created_at')->take(5)->get();
+        $assignments = Auth::user()->ownedAssignments()
+            ->orderByDesc('created_at')
+            ->take(5)
+            ->get();
 
         return AssignmentResource::collection($assignments);
     }

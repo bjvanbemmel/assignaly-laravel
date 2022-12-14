@@ -20,8 +20,8 @@
                         </label>
                         <default-dropdown
                             :options="filters.orderBy.options"
-                            :default="filters.orderBy.value"
-                            @update="(option) => filters.orderBy.value = option"
+                            :default="filters.orderBy.selected"
+                            @update="(option) => filters.orderBy.selected = option"
                             name="assignments-filters-orderby"
                             class="h-10"
                         />
@@ -37,8 +37,8 @@
                         </label>
                         <default-dropdown
                             :options="filters.perPage.options"
-                            :default="filters.perPage.value"
-                            @update="(option) => filters.perPage.value = option"
+                            :default="filters.perPage.selected"
+                            @update="(option) => filters.perPage.selected = option"
                             name="assignments-filters-perpage"
                             class="h-10"
                         />
@@ -114,19 +114,16 @@ export default {
     },
 
     mounted () {
-        axios.get('/assignments')
-            .then((res) => {
-                this.assignments = res.data.data
-            })
+        this.fetchAssignments()
     },
 
     created () {
-        this.filters.perPage.options = _.range(15, 51, 5).map((value) => {
-            return { label: value }
+        this.filters.perPage.options = _.range(5, 51, 5).map((value) => {
+            return { label: value, value: value }
         })
 
-        this.filters.perPage.value = this.filters.perPage.options[3]
-        this.filters.orderBy.value = this.filters.orderBy.options[1]
+        this.filters.perPage.selected = this.filters.perPage.options[3]
+        this.filters.orderBy.selected = this.filters.orderBy.options[1]
     },
 
     data () {
@@ -136,30 +133,10 @@ export default {
             filters: {
                 perPage: {
                     options: [],
-                    value: {},
+                    selected: {},
                 },
                 orderBy: {
                     options: [
-                        {
-                            label: 'Owner',
-                            value: 'owner',
-                        },
-                        {
-                            label: 'Status',
-                            value: 'status',
-                        },
-                        {
-                            label: 'Due at',
-                            value: 'due_at',
-                        },
-                        {
-                            label: 'Created at',
-                            value: 'created_at',
-                        },
-                        {
-                            label: 'Owner',
-                            value: 'owner',
-                        },
                         {
                             label: 'Status',
                             value: 'status',
@@ -173,13 +150,19 @@ export default {
                             value: 'created_at',
                         },
                     ],
-                    value: {},
+                    selected: {},
                 },
             },
         }
     },
 
     methods: {
+        fetchAssignments: _.debounce(function () {
+            axios.get(`/assignments?orderBy=${this.filters.orderBy.selected.value}&perPage=${this.filters.perPage.selected.value}`)
+                .then((res) => {
+                    this.assignments = res.data.data
+                })
+        }, 100),
         goToAssignment (assignment) {
             this.$router.push({
                 name: 'assignments.detail',
@@ -189,5 +172,23 @@ export default {
             })
         },
     },
+
+    watch: {
+        'filters.orderBy.selected' (to, from) {
+            if (to === from) {
+                return
+            }
+
+            this.fetchAssignments()
+        },
+
+        'filters.perPage.selected' (to, from) {
+            if (to === from) {
+                return
+            }
+
+            this.fetchAssignments()
+        }
+    }
 }
 </script>
