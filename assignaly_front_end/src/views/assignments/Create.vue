@@ -107,9 +107,9 @@ import DefaultButton from '../../components/FormInputs/DefaultButton.vue'
 import DefaultTextInput from '../../components/FormInputs/DefaultTextInput.vue'
 import DropdownToggler from '../../components/DropdownToggler.vue'
 import axios from 'axios'
-import { useUserStore } from '../../stores/user.js'
-import { useDropdownStore } from '../../stores/dropdown.js'
-import { debounce } from 'lodash'
+import { useUserStore, } from '../../stores/user.js'
+import { useDropdownStore, } from '../../stores/dropdown.js'
+import { debounce, } from 'lodash'
 
 export default {
 
@@ -133,6 +133,7 @@ export default {
                 results: [],
                 selected: [],
             },
+
             due_at: null,
         }
     },
@@ -146,7 +147,7 @@ export default {
                 users: this.users.selected.map((user) => user.id),
                 due_at: this.due_at,
             })
-            .then(() => this.$router.push({ name: 'assignments.index' }))
+                .then(() => this.$router.push({ name: 'assignments.index', }))
         },
 
         queryUsers:  debounce (function (query) {
@@ -156,7 +157,7 @@ export default {
             }
 
             axios.get(`/users?query=${query}`)
-                .then((res) => { 
+                .then((res) => {
                     this.users.results = res.data.data
                 })
         }),
@@ -202,7 +203,7 @@ export default {
 
             this.queryUsers(to)
             this.setName('create-user-search')
-        }
+        },
     },
 }
 </script>

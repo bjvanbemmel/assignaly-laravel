@@ -23,6 +23,7 @@ export default {
             type: String,
             required: true,
         },
+
         to: {
             type: Object,
             required: false,

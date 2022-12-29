@@ -13,11 +13,11 @@
                     <section
                         class="flex items-end"
                     >
-                            <default-button
+                        <default-button
                             :to="{ name: 'assignments.create' }"
-                                text="Create assignment"
-                                class="h-10"
-                            />
+                            text="Create assignment"
+                            class="h-10"
+                        />
                     </section>
 
                     <section
@@ -131,7 +131,7 @@ export default {
 
     created () {
         this.filters.perPage.options = _.range(5, 51, 5).map((value) => {
-            return { label: value, value: value }
+            return { label: value, value: value, }
         })
 
         this.filters.perPage.selected = this.filters.perPage.options[3]
@@ -147,6 +147,7 @@ export default {
                     options: [],
                     selected: {},
                 },
+
                 orderBy: {
                     options: [
                         {
@@ -162,6 +163,7 @@ export default {
                             value: 'created_at',
                         },
                     ],
+
                     selected: {},
                 },
             },
@@ -175,6 +177,7 @@ export default {
                     this.assignments = res.data.data
                 })
         }, 100),
+
         goToAssignment (assignment) {
             this.$router.push({
                 name: 'assignments.detail',
@@ -200,7 +203,7 @@ export default {
             }
 
             this.fetchAssignments()
-        }
-    }
+        },
+    },
 }
 </script>

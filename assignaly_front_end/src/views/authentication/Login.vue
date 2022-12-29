@@ -74,7 +74,7 @@ export default {
                     this.$router.push({ name: 'dashboard', })
                 })
                 .catch(() => {
-                    this.error = "Invalid credentials."
+                    this.error = 'Invalid credentials.'
                 })
         },
     },
