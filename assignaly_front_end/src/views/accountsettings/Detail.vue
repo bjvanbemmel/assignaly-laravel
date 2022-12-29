@@ -9,7 +9,7 @@
     >
         <!-- Settings -->
         <div class="flex flex-col w-fit">
-            <label>
+            <label class="hover:cursor-text">
                 Github integration:
             </label>
             <default-button
@@ -101,7 +101,7 @@ export default {
         },
 
         githubAuth () {
-            window.location = 'https://github.com/login/oauth/authorize?client_id=059949588ab8aee5ac24&redirect_uri=https://94ba-2a02-a46d-7a2f-1-e00d-2a9b-845d-853d.eu.ngrok.io/account/settings/integrations/activate/github&scope=user,repo'
+            window.location = 'http://localhost:84/oauth/github'
         },
 
         githubAuthGetToken (code) {
@@ -120,6 +120,7 @@ export default {
         githubAuthRevokeToken () {
             axios.delete('/integrations/github/token/revoke')
                 .then((res) => {
+                    this.githubCheckAuth()
                     console.log(res)
                 })
         },

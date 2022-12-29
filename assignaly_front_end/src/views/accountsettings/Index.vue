@@ -4,7 +4,7 @@
             Account Settings
         </page-title>
         <section class="grid sm:grid-cols-4 gap-6 text-white">
-            <div class="h-fit my-auto flex flex-col rounded-md bg-zinc-800 border border-zinc-600">
+            <div class="flex flex-col rounded-md bg-zinc-800 border border-zinc-600">
                 <button
                     :class="{ 'bg-zinc-900': this.$route.params.tab === 'profile' || this.$route.params.tab[0] === 'profile' }"
                     class="flex items-center space-x-4 p-4 first:border-t-0 last:border-b-0 border-x-none border-b rounded-t-md hover:text-zinc-300 border-zinc-600"

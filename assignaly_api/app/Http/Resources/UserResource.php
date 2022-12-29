@@ -21,7 +21,6 @@ class UserResource extends JsonResource
             'institute' => $this->institute,
             'role' => RoleResource::make($this->role),
             'settings' => $this->settings,
-            'integrations' => $this->integrations,
         ];
     }
 }
