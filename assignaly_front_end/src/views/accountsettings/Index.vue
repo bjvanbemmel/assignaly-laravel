@@ -42,7 +42,7 @@
                     <p>Privacy</p>
                 </button>
             </div>
-            <div class="p-2 col-span-3 h-fit my-auto flex flex-col rounded-md bg-zinc-800 border border-zinc-600">
+            <div class="p-2 col-span-3 h-fit flex flex-col rounded-md bg-zinc-800 border border-zinc-600">
                 <detail />
             </div>
         </section>

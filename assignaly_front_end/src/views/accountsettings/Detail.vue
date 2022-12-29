@@ -71,6 +71,8 @@ export default {
                 if (to.tab.length === 3 && to.tab.includes('integrations', 'activate', 'github')) {
                     this.githubAuthGetToken(this.$route.query['code'])
                 }
+
+                console.log(import.meta.env.VITE_REMOTE_BASE_URL)
             },
 
             immediate: true,
@@ -101,7 +103,7 @@ export default {
         },
 
         githubAuth () {
-            window.location = 'http://localhost:84/oauth/github'
+            window.location = import.meta.env.VITE_REMOTE_BASE_URL + '/oauth/github'
         },
 
         githubAuthGetToken (code) {

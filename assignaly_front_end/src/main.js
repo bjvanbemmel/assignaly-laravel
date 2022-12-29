@@ -4,7 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:84/api/'
+axios.defaults.baseURL = import.meta.env.VITE_REMOTE_BASE_URL + '/api'
 
 import App from './App.vue'
 import router from './router'
