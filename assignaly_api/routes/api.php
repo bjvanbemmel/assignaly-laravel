@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GithubController;
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
@@ -56,6 +57,12 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/assignments', 'store');
         Route::put('/assignments/{assignment}', 'update');
         Route::delete('/assignments/{assignment}', 'destroy');
+    });
+
+    Route::controller(GithubController::class)->group(function() {
+        Route::get('/integrations/github/user', 'user');
+        Route::post('/integrations/github/token/new', 'newToken');
+        Route::delete('/integrations/github/token/revoke', 'revokeToken');
     });
 
     Route::get('/search', [SearchController::class, 'search']);

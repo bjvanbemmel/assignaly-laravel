@@ -12,6 +12,7 @@ import Assignments from '@/views/assignments/Index.vue'
 import Assignment from '@/views/assignments/Detail.vue'
 import AssignmentCreate from '@/views/assignments/Create.vue'
 import Classrooms from '@/views/classrooms/Index.vue'
+import AccountSettings from '@/views/accountsettings/Index.vue'
 import axios from 'axios'
 
 const router = createRouter({
@@ -80,9 +81,9 @@ const router = createRouter({
             },
         },
         {
-            path: '/user/settings',
-            name: 'user.settings',
-            component: Classrooms,
+            path: '/account/settings/:tab(.*)*',
+            name: 'account.settings',
+            component: AccountSettings,
             meta: {
                 indexed: true,
                 label: 'Account Settings',

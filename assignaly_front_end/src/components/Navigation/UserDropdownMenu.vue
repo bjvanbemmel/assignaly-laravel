@@ -39,7 +39,7 @@
         >
             <router-link
                 class="flex first:rounded-t-md last:rounded-b-md items-center space-x-2 p-2 border hover:text-zinc-300 first:border-b-0 border-zinc-600"
-                :to="{ name: 'user.settings' }"
+                :to="{ name: 'account.settings', params: { tab: 'profile', }, }"
             >
                 <hero-icon
                     class="h-5"
@@ -87,18 +87,6 @@ export default {
     data () {
         return {
             isActive: false,
-            routes: [
-                {
-                    name: 'user.settings',
-                    label: 'Account settings',
-                    icon: 'Cog6Tooth',
-                },
-                {
-                    name: 'authentication.logout',
-                    label: 'Logout',
-                    icon: 'ArrowRightOnRectangle',
-                },
-            ],
         }
     },
 

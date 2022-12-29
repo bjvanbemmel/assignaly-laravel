@@ -172,7 +172,6 @@ export default {
         AssignmentStatus,
         Modal,
         UserIcon,
-        UserIconOverflow,
     },
 
     created () {
