@@ -32,7 +32,8 @@ class AssignmentStoreRequest extends FormRequest
             'due_at' => 'date',
             'finished_at' => 'date',
             'numeric_review' => 'int|min:1',
-            'feedback' => 'string'
+            'feedback' => 'string',
+            'remote_repository' => 'url',
         ];
     }
 }

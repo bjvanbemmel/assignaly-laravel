@@ -20,8 +20,6 @@
                     size="sm"
                     hover
                     :amount="users.overflowUsers.length"
-                    class="z-10"
-                    @click="toggleModal"
                 />
             </div>
         </div>
@@ -34,76 +32,20 @@
             :status="assignment.status"
             class="mt-2"
         />
-
-        <modal
-            :active="modal.active"
-            @close="() => toggleModal()"
-            @click.stop="() => toggleModal()"
-        >
-            <template v-slot:title>
-                Users
-            </template>
-
-            <template v-slot:desc>
-                All of the users this assignment is assigned to.
-            </template>
-
-            <template v-slot:content>
-                <div
-                    class="flex flex-col origin-top space-y-2 h-80 overflow-y-scroll"
-                >
-                    <div
-                        v-for="user, key in assignment.users"
-                        :key="key"
-                        class="flex relative space-x-2 bg-zinc-800 border border-zinc-600 p-1.5"
-                    >
-                        <user-icon
-                            :user="user"
-                            size="sm"
-                            class="w-8"
-                        />
-                        <div
-                            class="flex-col text-left"
-                        >
-                            <p class="text-sm"> {{ user.name }} </p>
-                            <p class="text-xs text-zinc-400"> {{ this.role(user) }} </p>
-                        </div>
-                        <a
-                            :href="`mailto: ${user.email}`"
-                            class="absolute underline hover:no-underline right-1.5 bottom-1.5 h-fit text-blue-400 text-xs"
-                        >
-                            {{ user.email }}
-                        </a>
-                    </div>
-                </div>
-            </template>
-
-            <template v-slot:actions>
-                <default-button
-                    text="Close"
-                    @click="() => toggleModal()"
-                />
-            </template>
-
-        </modal>
     </button>
 </template>
 
 <script>
 import UserIcon from './../../components/UserIcon.vue'
 import UserIconOverflow from './../../components/UserIconOverflow.vue'
-import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
 import AssignmentStatus from './AssignmentStatus.vue'
-import Modal from './../../components/Modal.vue'
 
 export default {
 
     components: {
         UserIcon,
         UserIconOverflow,
-        DefaultButton,
         AssignmentStatus,
-        Modal,
     },
 
     data () {
@@ -135,10 +77,6 @@ export default {
             let role = user.role.name
 
             return role.charAt(0).toUpperCase() + role.slice(1)
-        },
-
-        toggleModal () {
-            this.modal.active = !this.modal.active
         },
     },
 }

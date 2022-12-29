@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('review')->nullable();
             $table->string('feedback')->nullable();
             $table->string('status')->default('Open');
+            $table->string('remote_respository')->nullable();
         });
     }
 
