@@ -12,6 +12,7 @@
                 type="text"
                 placeholder="Click me or press '/' to search..."
                 class="rounded-md placeholder:text-zinc-500 border border-zinc-600 bg-zinc-800 px-2 py-1.5 w-96 focus:outline-none  ring-zinc-600 focus:ring-2"
+                @keypress.stop
                 @keyup.esc="closeOnEscape"
             />
             <div

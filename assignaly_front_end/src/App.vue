@@ -1,7 +1,7 @@
 <template>
     <section
         v-if="loggedIn"
-        class="relative min-h-screen flex flex-col"
+        class="relative text-zinc-200 min-h-screen flex flex-col"
     >
         <horizontal-navigation />
 
@@ -10,9 +10,7 @@
             tabindex="-1"
             ref="mainWrapperRouterView"
         >
-            <router-view
-                class="text-zinc-200"
-            />
+            <router-view />
         </main>
 
         <footer
@@ -41,7 +39,6 @@
 
     <section
         v-else
-        class="text-zinc-200"
     >
         <router-view />
     </section>

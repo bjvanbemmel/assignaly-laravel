@@ -22,6 +22,7 @@ class AssignmentResource extends JsonResource
             'finished_at' => $this->finished_at,
             'review' => $this->review,
             'status' => $this->status,
+            'integration_type' => $this->integration_type,
             'remote_repository' => $this->remote_repository,
             'owner' => UserResource::make($this->owner),
             'users' => UserResource::collection($this->users->sortByDesc('role_id')),

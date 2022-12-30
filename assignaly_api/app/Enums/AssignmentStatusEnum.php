@@ -6,7 +6,7 @@ namespace App\Enums;
 
 enum AssignmentStatusEnum: string
 {
-    case OPEN = 'Open';
-    case CLOSED = 'Closed';
-    case IN_REVIEW = 'In review';
+    case OPEN = 'open';
+    case CLOSED = 'closed';
+    case IN_REVIEW = 'in-review';
 }

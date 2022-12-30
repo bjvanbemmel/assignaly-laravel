@@ -6,31 +6,27 @@
     >
         <div
             class="cursor-default shadow-md shadow-black/40 rounded-md bg-zinc-900 border border-zinc-700 p-2 min-w-[24rem] min-h-[10rem] h-max w-max"
+            @click.stop=""
         >
             <div
-                @click.stop=""
                 class="text-lg text-center select-none"
             >
                 <slot name="title" />
             </div>
 
             <div
-                @click.stop=""
                 class="text-xs text-center text-zinc-400 font-medium border-b border-zinc-700 pb-2 mb-2 select-none"
             >
                 <slot name="desc" />
             </div>
 
-            <div
-                @click.stop=""
-            >
+            <div>
                 <slot name="content" />
             </div>
 
             <div
                 class="flex justify-end space-x-2 border-t border-zinc-700 pt-2 mt-2"
                 v-if="this.$slots.actions"
-                @click.stop=""
             >
                 <slot name="actions" />
             </div>

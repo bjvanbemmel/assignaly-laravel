@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assignment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,6 +55,25 @@ class GithubController extends Controller
             ->delete('https://api.github.com/applications/' . config('integrations.github.client_id') . '/grant', [
                 'access_token' => $request->user()->integrations['github'] 
             ]);
+
+        return new JsonResponse($response->json(), $response->status());
+    }
+
+    public function newRepository(Request $request): JsonResponse
+    {
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integrations['github'])
+            ->post('https://api.github.com/user/repos', [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'private' => $request->boolean('private'),
+            ]);
+
+        $assignment = Assignment::findOrFail($request->input('assignment_id'));
+        $assignment->update([
+            'remote_repository' => $response->json()['html_url'],
+            'integration_type' => $request->input('integration_type'),
+        ]);
 
         return new JsonResponse($response->json(), $response->status());
     }

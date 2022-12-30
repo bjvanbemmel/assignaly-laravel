@@ -33,7 +33,9 @@ class AssignmentUpdateRequest extends FormRequest
             'finished_at' => 'date',
             'numeric_review' => 'int|min:1',
             'feedback' => 'string',
-            'status' => 'string'
+            'status' => 'string',
+            'integration_type' => 'nullable|string',
+            'remote_repository' => 'url',
         ];
     }
 }

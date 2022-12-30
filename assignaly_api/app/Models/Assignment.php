@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AssignmentIntegrationEnum;
 use App\Enums\AssignmentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,8 @@ class Assignment extends Model
         'review',
         'feedback',
         'status',
+        'integration_type',
+        'remote_repository',
     ];
 
     /**
@@ -41,7 +44,8 @@ class Assignment extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'assignment' => AssignmentStatusEnum::class,
+        'status' => AssignmentStatusEnum::class,
+        'integration_type' => AssignmentIntegrationEnum::class,
     ];
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

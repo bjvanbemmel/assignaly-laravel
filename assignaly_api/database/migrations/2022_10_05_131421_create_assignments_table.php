@@ -23,8 +23,9 @@ return new class extends Migration
             $table->dateTime('finished_at')->nullable();
             $table->integer('review')->nullable();
             $table->string('feedback')->nullable();
-            $table->string('status')->default('Open');
-            $table->string('remote_respository')->nullable();
+            $table->string('status')->default('open');
+            $table->string('integration_type')->nullable();
+            $table->string('remote_repository')->nullable();
         });
     }
 

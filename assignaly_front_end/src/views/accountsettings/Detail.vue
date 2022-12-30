@@ -23,7 +23,7 @@
                 v-if="integrations.github.authenticated"
             >
                 Logged in as {{ integrations.github.data.login }}. <a
-                    class="text-white underline hover:no-underline" 
+                    class="text-white underline hover:no-underline"
                     @click.prevent="githubAuthRevokeToken()"
                     href=""
                 >
@@ -41,7 +41,7 @@
 
 <script>
 import DefaultButton from '../../components/FormInputs/DefaultButton.vue'
-import { debounce } from 'lodash'
+import { debounce, } from 'lodash'
 import axios from 'axios'
 
 export default {
@@ -71,8 +71,6 @@ export default {
                 if (to.tab.length === 3 && to.tab.includes('integrations', 'activate', 'github')) {
                     this.githubAuthGetToken(this.$route.query['code'])
                 }
-
-                console.log(import.meta.env.VITE_REMOTE_BASE_URL)
             },
 
             immediate: true,
