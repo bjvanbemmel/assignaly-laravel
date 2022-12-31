@@ -1,7 +1,6 @@
 <template>
     <div
         v-if="active"
-        @click.stop="toggleModal"
         class="z-40 fixed cursor-pointer bg-black/60 w-screen h-screen top-0 left-0 flex justify-center items-center"
     >
         <div

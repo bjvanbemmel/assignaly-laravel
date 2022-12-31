@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GithubDeleteRepositoryRequest;
+use App\Http\Requests\GithubNewRepositoryRequest;
+use App\Http\Requests\GithubNewTokenRequest;
 use App\Models\Assignment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +19,7 @@ class GithubController extends Controller
         return Redirect::to(
             'https://github.com/login/oauth/authorize?client_id=' . config('integrations.github.client_id')
                 . '&redirect_uri=' . config('integrations.github.redirect_uri')
-                . '&scope=user,repo'
+                . '&scope=user,repo,delete_repo'
         );
     }
 
@@ -28,7 +31,7 @@ class GithubController extends Controller
         return new JsonResponse($response->json(), $response->status());
     }
 
-    public function newToken(Request $request): JsonResponse
+    public function newToken(GithubNewTokenRequest $request): JsonResponse
     {
         $response = Http::acceptJson()
             ->post('https://github.com/login/oauth/access_token', [
@@ -59,7 +62,7 @@ class GithubController extends Controller
         return new JsonResponse($response->json(), $response->status());
     }
 
-    public function newRepository(Request $request): JsonResponse
+    public function newRepository(GithubNewRepositoryRequest $request): JsonResponse
     {
         $response = Http::acceptJson()
             ->withToken($request->user()->integrations['github'])
@@ -71,9 +74,29 @@ class GithubController extends Controller
 
         $assignment = Assignment::findOrFail($request->input('assignment_id'));
         $assignment->update([
-            'remote_repository' => $response->json()['html_url'],
+            'remote_repository' => [
+                'public_url' => $response->json()['html_url'],
+                'api_url' => $response->json()['url'],
+            ],
             'integration_type' => $request->input('integration_type'),
         ]);
+
+        return new JsonResponse($response->json(), $response->status());
+    }
+
+    public function deleteRepository(GithubDeleteRepositoryRequest $request): JsonResponse
+    {
+        $assignment = Assignment::findOrFail($request->input('assignment_id'));
+
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integrations['github'])
+            ->delete($assignment->remote_repository['api_url']);
+
+        if ($response->successful()) {
+            $assignment->update([
+                'remote_repository' => null,
+            ]);
+        }
 
         return new JsonResponse($response->json(), $response->status());
     }

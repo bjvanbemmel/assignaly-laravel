@@ -46,6 +46,7 @@ class Assignment extends Model
     protected $casts = [
         'status' => AssignmentStatusEnum::class,
         'integration_type' => AssignmentIntegrationEnum::class,
+        'remote_repository' => 'array',
     ];
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

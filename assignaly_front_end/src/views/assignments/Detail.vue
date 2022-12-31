@@ -156,15 +156,27 @@
                         Create new repository
                     </a>
 
-                    <a
+                    <div
                         v-else
-                        :href="assignment.remote_repository"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        class="underline hover:no-underline"
+                        class="flex flex-col"
                     >
-                        {{ assignment.remote_repository }}
-                    </a>
+                        <a
+                            :href="assignment.remote_repository.public_url"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            class="underline hover:no-underline"
+                        >
+                            {{ assignment.remote_repository.public_url }}
+                        </a>
+
+                        <a
+                            href=""
+                            @click.prevent="toggleDeleteRepositoryModal()"
+                            class="underline hover:no-underline"
+                        >
+                            Delete repository
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -199,6 +211,7 @@
             <template v-slot:actions>
                 <default-button
                     text="Delete"
+                    class="enabled:bg-red-800 enabled:border-red-700 enabled:hover:bg-red-900"
                     @click.stop="() => approveDeletionModal()"
                 />
 
@@ -225,6 +238,12 @@
             </template>
 
             <template v-slot:content>
+                <default-alert
+                    v-if="modals.newRepository.data.error"
+                    class="mx-2"
+                >
+                    {{ modals.newRepository.data.error }}
+                </default-alert>
                 <div
                     v-if="modals.newRepository.loading"
                     class="h-32 flex justify-center items-center"
@@ -297,6 +316,7 @@
                             <default-text-input
                                 name="assignment-new-repository-desc"
                                 placeholder="My blazingly fast <insert language here> framework."
+                                @update="(text) => modals.newRepository.data.desc = text"
                                 :disabled="dropdowns.integrationType.selected.value === null"
                             />
 
@@ -337,14 +357,70 @@
             <template v-slot:actions>
                 <default-button
                     text="Create new repository"
-                    :disabled="dropdowns.integrationType.selected.value === null"
-                    class="bg-green-700 enabled:border-green-900 hover:bg-green-800"
+                    :disabled="dropdowns.integrationType.selected.value === null || modals.newRepository.loading"
+                    class="enabled:bg-green-800 enabled:border-green-700 enabled:hover:bg-green-900"
                     @click.stop="githubNewRepository()"
                 />
 
                 <default-button
                     text="Cancel"
+                    :disabled="modals.newRepository.loading"
                     @click.stop="() => toggleNewRepositoryModal()"
+                />
+            </template>
+
+        </modal>
+
+        <!-- Delete repository modal -->
+        
+        <modal
+            :active="modals.deleteRepository.active"
+            @click.stop="() => toggleDeleteRepositoryModal()"
+            @close="() => toggleDeleteRepositoryModal()"
+        >
+            <template v-slot:title>
+                Delete repository
+            </template>
+
+            <template v-slot:desc>
+                Delete the repository associated with this assignment.
+            </template>
+
+            <template v-slot:content>
+                <div
+                    v-if="modals.deleteRepository.loading"
+                    class="h-32 flex justify-center items-center"
+                >
+                    <hero-icon
+                        name="ArrowPath"
+                        class="h-8 text-zinc-500 animate-spin"
+                    />
+                </div>
+
+                <div
+                    v-else
+                    class="p-2 flex flex-col gap-6"
+                >
+                    <div class="w-full text-center p-2">
+                        <p>Are you sure you wish to permanently delete the associated remote repository?</p>
+                        <p>Assigned users will be notified.</p>
+                        <p class="text-red-600 font-bold">This action is irreversible.</p>
+                    </div>
+                </div>
+            </template>
+
+            <template v-slot:actions>
+                <default-button
+                    text="Delete"
+                    :disabled="modals.deleteRepository.loading"
+                    class="enabled:bg-red-800 enabled:border-red-700 enabled:hover:bg-red-900"
+                    @click.stop="() => githubDeleteRepository()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    :disabled="modals.deleteRepository.loading"
+                    @click.stop="() => toggleDeleteRepositoryModal()"
                 />
             </template>
 
@@ -357,6 +433,7 @@ import HeroIcon from './../../components/HeroIcon.vue'
 import DefaultButton from './../../components/FormInputs/DefaultButton.vue'
 import DefaultDropdown from './../../components/FormInputs/DefaultDropdown.vue'
 import DefaultTextInput from './../../components/FormInputs/DefaultTextInput.vue'
+import DefaultAlert from './../../components/FormInputs/DefaultAlert.vue'
 import AssignmentStatus from './../../components/Assignments/AssignmentStatus.vue'
 import Modal from './../../components/Modal.vue'
 import UserIcon from './../../components/UserIcon.vue'
@@ -370,6 +447,7 @@ export default {
         DefaultButton,
         DefaultDropdown,
         DefaultTextInput,
+        DefaultAlert,
         AssignmentStatus,
         Modal,
         UserIcon,
@@ -408,7 +486,13 @@ export default {
                                 value: false,
                             },
                         ],
+                        error: null,
                     },
+                },
+
+                deleteRepository: {
+                    active: false,
+                    loading: false,
                 },
             },
 
@@ -497,16 +581,34 @@ export default {
             this.modals.deleteAssignment.active = !this.modals.deleteAssignment.active
         },
 
+        toggleNewRepositoryModal () {
+            if (this.modals.newRepository.loading) {
+                return
+            }
+
+            this.modals.newRepository.active = !this.modals.newRepository.active
+        },
+
+        toggleDeleteRepositoryModal () {
+            if (this.modals.deleteRepository.loading) {
+                return
+            }
+
+            this.modals.deleteRepository.active = !this.modals.deleteRepository.active
+        },
+
         approveDeletionModal () {
             this.toggleDeletionModal()
             this.deleteAssignment()
         },
 
-        toggleNewRepositoryModal () {
-            this.modals.newRepository.active = !this.modals.newRepository.active
-        },
-
         githubNewRepository () {
+            let validationErrors = this.githubValidateNewRepositoryInput()
+            if (validationErrors !== true) {
+                this.modals.newRepository.data.error = validationErrors
+                return
+            }
+
             this.modals.newRepository.loading = true
 
             axios.post('/integrations/github/repo/new', {
@@ -523,6 +625,44 @@ export default {
                 })
         },
 
+        githubValidateNewRepositoryInput () {
+            const input = this.modals.newRepository.data
+            input.error = null
+
+            if (input.title.length === 0) {
+                return 'Title may not be empty.'
+            }
+
+            if (input.title.length > 100) {
+                return 'Title may not be longer than 100 characters.'
+            }
+
+            if (/[`!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?~]/.test(input.title)) {
+                return 'Title may not contain special characters'
+            }
+
+            if (input.desc.length > 255) {
+                return 'Description may not be longer than 255 characters.'
+            }
+
+            return true
+        },
+
+        githubDeleteRepository () {
+            this.modals.deleteRepository.loading = true
+
+            axios.delete('/integrations/github/repo/delete', {
+                data: {
+                    assignment_id: this.assignment.id,
+                },
+            })
+                .then((res) => {
+                    console.log(res)
+                    this.modals.deleteRepository.loading = false
+                    this.fetchData()
+                    this.toggleDeleteRepositoryModal()
+                })
+        },
     },
 
     watch: {
