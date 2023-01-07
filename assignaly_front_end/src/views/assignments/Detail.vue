@@ -128,8 +128,55 @@
                         </div>
                     </div>
                 </div>
+
+                <label class="text-sm">
+                    Remote repository:
+                </label>
+
+                <div class="p-2 bg-zinc-900/50 rounded-md border border-zinc-700">
+                    <div
+                        v-if="assignment.remote_repository !== null"
+                        class="flex gap-2"
+                    >
+                        <a
+                            target="_blank"
+                            ref="noreferrer noopener"
+                            :href="assignment.remote_repository.public_url"
+                        >
+                            <default-button>
+                                View on Github
+                                <hero-icon
+                                    name="ArrowTopRightOnSquare"
+                                    class="h-3 mb-auto"
+                                />
+                            </default-button>
+                        </a>
+
+                        <default-button
+                            text="Edit repository"
+                            @click="toggleUpdateRepositoryModal()"
+                        />
+
+                        <default-button
+                            text="Delete repository"
+                            @click="toggleDeleteRepositoryModal()"
+                        />
+                    </div>
+
+                    <div v-else>
+                        <default-button
+                            text="Create new repository"
+                            @click="toggleNewRepositoryModal()"
+                        />
+                    </div>
+                </div>
+
+                <label class="text-sm">
+                    Actions:
+                </label>
+
                 <div
-                    class="flex space-x-2 bg-zinc-900/50 border-b border-zinc-600 mt-4 p-2"
+                    class="flex gap-2 p-2 bg-zinc-900/50 rounded-md border border-zinc-700"
                 >
                     <default-dropdown
                         :options="dropdowns.status.options"
@@ -146,39 +193,6 @@
                         @click="toggleDeletionModal"
                     />
                 </div>
-                <div>
-                    <a
-                        href=""
-                        v-if="assignment.remote_repository === null"
-                        @click.prevent="toggleNewRepositoryModal()"
-                        class="underline hover:no-underline"
-                    >
-                        Create new repository
-                    </a>
-
-                    <div
-                        v-else
-                        class="flex flex-col"
-                    >
-                        <a
-                            :href="assignment.remote_repository.public_url"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            class="underline hover:no-underline"
-                        >
-                            {{ assignment.remote_repository.public_url }}
-                        </a>
-
-                        <a
-                            href=""
-                            @click.prevent="toggleDeleteRepositoryModal()"
-                            class="underline hover:no-underline"
-                        >
-                            Delete repository
-                        </a>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
@@ -371,6 +385,135 @@
 
         </modal>
 
+        <!-- Update repository modal -->
+
+        <modal
+            :active="modals.updateRepository.active"
+            @click.stop="() => toggleUpdateRepositoryModal()"
+            @close="() => toggleUpdateRepositoryModal()"
+        >
+            <template v-slot:title>
+                Update repository
+            </template>
+
+            <template v-slot:desc>
+                Update the associated remote repository
+            </template>
+
+            <template v-slot:content>
+                <default-alert
+                    v-if="modals.updateRepository.data.error"
+                    class="mx-2"
+                >
+                    {{ modals.updateRepository.data.error }}
+                </default-alert>
+                <div
+                    v-if="modals.updateRepository.loading"
+                    class="h-32 flex justify-center items-center"
+                >
+                    <hero-icon
+                        name="ArrowPath"
+                        class="h-8 text-zinc-500 animate-spin"
+                    />
+                </div>
+
+                <div
+                    v-else
+                    class="p-2 flex flex-col gap-6"
+                >
+                    <section
+                        class="flex flex-col gap-6"
+                        :class="{ 'text-zinc-600': dropdowns.integrationType.selected.value === null }"
+                    >
+                        <div
+                            class="flex flex-col space-y-0.5"
+                        >
+                            <label
+                                for="assignment-new-repository-title"
+                                class="text-sm"
+                            >
+                                Repository title:
+                            </label>
+
+                            <default-text-input
+                                name="assignment-new-repository-title"
+                                :placeholder="toSlug(assignment.title)"
+                                :value="modals.updateRepository.data.title"
+                                @update="(text) => modals.updateRepository.data.title = toSlug(text)"
+                            />
+
+                            <p class="text-xs text-zinc-500 italic">
+                                Special characters and spaces are not allowed. Max length of 100 characters.
+                            </p>
+                        </div>
+
+                        <div
+                            class="flex flex-col space-y-0.5"
+                        >
+                            <label
+                                for="assignment-new-repository-desc"
+                                class="text-sm"
+                            >
+                                Repository description:
+                            </label>
+
+                            <default-text-input
+                                name="assignment-new-repository-desc"
+                                placeholder="My blazingly fast <insert language here> framework."
+                                @update="(text) => modals.updateRepository.data.desc = text"
+                            />
+
+                            <p class="text-xs text-zinc-500 italic">
+                                Max length of 255 characters.
+                            </p>
+                        </div>
+
+                        <section class="flex flex-col">
+                            <button
+                                v-for="option, key in modals.updateRepository.data.options.filter(option => option.enabled)"
+                                :key="key"
+                                class="flex disabled:cursor-not-allowed disabled:bg-zinc-900 disabled:text-zinc-600 gap-2 bg-zinc-800 first-of-type:rounded-t-md last-of-type:rounded-b-md last-of-type:border-b border border-b-0 border-zinc-700 p-2"
+                                :name="option.name"
+                                @click="option.value = !option.value"
+                            >
+                                <hero-icon
+                                    v-if="option.value"
+                                    name="CheckCircle"
+                                    variant="mini"
+                                    class="h-6 my-auto"
+                                />
+
+                                <hero-icon
+                                    v-else
+                                    name="XCircle"
+                                    variant="mini"
+                                    class="h-6 my-auto text-zinc-600"
+                                />
+                                {{ option.label }}
+                            </button>
+                        </section>
+                    </section>
+                </div>
+            </template>
+
+            <template v-slot:actions>
+                <default-button
+                    text="Update repository"
+                    :disabled="modals.updateRepository.loading"
+                    class="enabled:bg-green-800 enabled:border-green-700 enabled:hover:bg-green-900"
+                    @click.stop="githubNewRepository()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    :disabled="modals.updateRepository.loading"
+                    @click.stop="() => toggleNewRepositoryModal()"
+                />
+            </template>
+
+        </modal>
+
+
         <!-- Delete repository modal -->
         
         <modal
@@ -490,6 +633,25 @@ export default {
                     },
                 },
 
+                updateRepository: {
+                    active: false,
+                    loading: false,
+                    data: {
+                        title: '',
+                        desc: '',
+                        private: false,
+                        options: [
+                            {
+                                label: 'Make repository private.',
+                                name: 'assignment-new-repository-private',
+                                enabled: true,
+                                value: false,
+                            },
+                        ],
+                        error: null,
+                    },
+                },
+
                 deleteRepository: {
                     active: false,
                     loading: false,
@@ -546,6 +708,7 @@ export default {
                 .then((res) => {
                     this.assignment = res.data.data
                     this.modals.newRepository.data.title = this.toSlug(this.assignment.title)
+                    this.modals.updateRepository.data.title = this.toSlug(this.assignment.title)
 
                     this.dropdowns.status.selected = {
                         label: this.dropdowns.status.options.find(status => status.value === res.data.data.status).label,
@@ -587,6 +750,14 @@ export default {
             }
 
             this.modals.newRepository.active = !this.modals.newRepository.active
+        },
+
+        toggleUpdateRepositoryModal () {
+            if (this.modals.updateRepository.loading) {
+                return
+            }
+
+            this.modals.updateRepository.active = !this.modals.updateRepository.active
         },
 
         toggleDeleteRepositoryModal () {
