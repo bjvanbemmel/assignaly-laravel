@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'institute' => $this->institute,
             'role' => RoleResource::make($this->role),
+            'integrations' => GitIntegrationResource::collection($this->integrations),
             'settings' => $this->settings,
         ];
     }

@@ -126,12 +126,20 @@
                                 </a>
                             </div>
                             <default-button
-                                v-if="assignment.remote_repository"
+                                v-if="assignment.remote_repository && hasGithubIntegration(user) && !isCollaboratorToRepository(user)"
                                 @click="githubAddUserAsCollaborator(user.id)"
-                                class="ml-auto mr-4 aspect-square"
+                                class="ml-auto mr-4"
                                 title="Add as collaborator"
+                                :disabled="collabInvitesSent.includes(user.id)"
                             >
+                                <p
+                                    v-if="collabInvitesSent.includes(user.id)"
+                                >
+                                    Invite sent
+                                </p>
+
                                 <hero-icon
+                                    v-else
                                     name="UserPlus"
                                     class="h-4"
                                 />
@@ -705,6 +713,8 @@ export default {
                     ],
                 },
             },
+
+            collabInvitesSent: [],
         }
     },
 
@@ -794,7 +804,7 @@ export default {
 
             this.modals.newRepository.loading = true
 
-            axios.post('/integrations/github/repo/new', {
+            axios.post('/integrations/github/repo', {
                 assignment_id: this.assignment.id,
                 integration_type: this.dropdowns.integrationType.selected.value,
                 name: this.modals.newRepository.data.title,
@@ -834,7 +844,7 @@ export default {
         githubDeleteRepository () {
             this.modals.deleteRepository.loading = true
 
-            axios.delete(`/integrations/github/repo/${this.assignment.id}/delete`)
+            axios.delete(`/integrations/github/repo/${this.assignment.id}`)
                 .then((res) => {
                     console.log(res)
                     this.modals.deleteRepository.loading = false
@@ -843,8 +853,22 @@ export default {
                 })
         },
 
-        githubAddUserAsCollaborator(user) {
-            axios.post(`/integrations/github/repo/${this.assignment.id}/collaborators/add/${user}`)
+        githubAddUserAsCollaborator (user) {
+            axios.post(`/integrations/github/repo/${this.assignment.id}/collaborators/${user}`)
+                .then((res) => {
+                    console.log(res)
+                    this.collabInvitesSent.push(user)
+                })
+        },
+
+        hasGithubIntegration (user) {
+            return user.integrations.filter((integration) => {
+                return integration.network_name == 'Github'
+            }).length > 0
+        },
+
+        isCollaboratorToRepository (user) {
+            axios.get(`/integrations/github/repo/${this.assignment.id}/collaborators/${user.id}`)
                 .then((res) => {
                     console.log(res)
                 })
@@ -854,6 +878,7 @@ export default {
     watch: {
         '$route.params' () {
             this.fetchData()
+            this.collabInvitesSent = []
             useDropdownStore().setName('')
             console.log(useDropdownStore().getName)
         },

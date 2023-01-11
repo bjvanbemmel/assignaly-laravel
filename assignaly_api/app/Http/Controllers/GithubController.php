@@ -8,11 +8,9 @@ use App\Models\Assignment;
 use App\Models\GitIntegration;
 use App\Models\GitNetwork;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 
@@ -131,9 +129,22 @@ class GithubController extends Controller
             ->withToken($request->user()->integration('Github')->api_key)
             ->put($assignment->remote_repository['api_url']
                 . '/collaborators/'
-                . $user->integration('Github')->username, [
-                'permission' => 'all',
-            ]);
+                . $user->integration('Github')->username, 
+                [
+                    'permission' => 'all',
+                ]
+            );
+
+        return new JsonResponse($response->json(), $response->status());
+    }
+
+    public function isCollaboratorToRepository(Request $request, Assignment $assignment, User $user): JsonResponse
+    {
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integration('Github')->api_key)
+            ->get($assignment->remote_repository['api_url']
+                . '/collaborators/'
+                . $user->integration('Github')->username);
 
         return new JsonResponse($response->json(), $response->status());
     }

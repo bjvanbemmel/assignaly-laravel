@@ -106,7 +106,7 @@ export default {
 
         githubAuthGetToken (code) {
             console.log(code)
-            axios.post('/integrations/github/token/new', {
+            axios.post('/integrations/github/token', {
                 code: code,
             })
                 .then((res) => {
@@ -118,7 +118,7 @@ export default {
         },
 
         githubAuthRevokeToken () {
-            axios.delete('/integrations/github/token/revoke')
+            axios.delete('/integrations/github/token')
                 .then((res) => {
                     this.githubCheckAuth()
                     console.log(res)

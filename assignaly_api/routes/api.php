@@ -61,12 +61,13 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::controller(GithubController::class)->group(function() {
         Route::get('/integrations/github/user', 'user');
-        Route::post('/integrations/github/token/new', 'newToken');
-        Route::delete('/integrations/github/token/revoke', 'revokeToken');
-        Route::post('/integrations/github/repo/new', 'newRepository');
-        Route::delete('/integrations/github/repo/{assignment}/delete', 'deleteRepository');
-        Route::put('/integrations/github/repo/{assignment}/update', 'updateRepository');
-        Route::post('/integrations/github/repo/{assignment}/collaborators/add/{user}', 'addCollaboratorToRepository');
+        Route::post('/integrations/github/token', 'newToken');
+        Route::delete('/integrations/github/token', 'revokeToken');
+        Route::post('/integrations/github/repo', 'newRepository');
+        Route::delete('/integrations/github/repo/{assignment}', 'deleteRepository');
+        Route::put('/integrations/github/repo/{assignment}', 'updateRepository');
+        Route::post('/integrations/github/repo/{assignment}/collaborators/{user}', 'addCollaboratorToRepository');
+        Route::get('/integrations/github/repo/{assignment}/collaborators/{user}', 'isCollaboratorToRepository');
     });
 
     Route::get('/search', [SearchController::class, 'search']);
