@@ -100,4 +100,18 @@ class GithubController extends Controller
 
         return new JsonResponse($response->json(), $response->status());
     }
+
+    public function addCollaboratorToRepository(Http $request): JsonResponse
+    {
+        $assignment = Assignment::findOrFail($request->input('assignment_id'));
+
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integrations['github'])
+            ->put('https://api.github.com/repos/'
+                . $assignment->remote_repository['api_url']
+                . '/collaborators/'
+        );
+
+        return new JsonResponse($response->json(), $response->status());
+    }
 }

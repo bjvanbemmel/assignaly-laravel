@@ -65,7 +65,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/integrations/github/token/revoke', 'revokeToken');
         Route::post('/integrations/github/repo/new', 'newRepository');
         Route::delete('/integrations/github/repo/delete', 'deleteRepository');
-        Route::patch('/integrations/github/repo/update', 'updateRepository');
+        Route::put('/integrations/github/repo/update', 'updateRepository');
+        Route::put('/integrations/github/repo/collaborator/add', 'addCollaboratorToRepository');
     });
 
     Route::get('/search', [SearchController::class, 'search']);

@@ -730,7 +730,7 @@ export default {
 
         updateAssignmentStatus (status) {
             axios.put(`/assignments/${this.assignment.id}`, {
-                status: status.label,
+                status: status.value,
             })
                 .then(() => this.fetchData())
         },
