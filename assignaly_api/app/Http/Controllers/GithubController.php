@@ -129,11 +129,11 @@ class GithubController extends Controller
     {
         $response = Http::acceptJson()
             ->withToken($request->user()->integration('Github')->api_key)
-            ->put('https://api.github.com/repos/'
-                . $assignment->remote_repository['api_url']
+            ->put($assignment->remote_repository['api_url']
                 . '/collaborators/'
-                . $user->integration('Github')->username
-        );
+                . $user->integration('Github')->username, [
+                'permission' => 'all',
+            ]);
 
         return new JsonResponse($response->json(), $response->status());
     }
