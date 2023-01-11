@@ -125,6 +125,18 @@
                                     {{ user.email }}
                                 </a>
                             </div>
+                            <default-button
+                                v-if="assignment.remote_repository"
+                                @click="githubAddUserAsCollaborator(user.id)"
+                                class="ml-auto mr-4 aspect-square"
+                                title="Add as collaborator"
+                            >
+                                <hero-icon
+                                    name="UserPlus"
+                                    class="h-4"
+                                />
+                                
+                            </default-button>
                         </div>
                     </div>
                 </div>
@@ -507,7 +519,7 @@
                 <default-button
                     text="Cancel"
                     :disabled="modals.updateRepository.loading"
-                    @click.stop="() => toggleNewRepositoryModal()"
+                    @click.stop="() => toggleUpdateRepositoryModal()"
                 />
             </template>
 
@@ -822,16 +834,19 @@ export default {
         githubDeleteRepository () {
             this.modals.deleteRepository.loading = true
 
-            axios.delete('/integrations/github/repo/delete', {
-                data: {
-                    assignment_id: this.assignment.id,
-                },
-            })
+            axios.delete(`/integrations/github/repo/${this.assignment.id}/delete`)
                 .then((res) => {
                     console.log(res)
                     this.modals.deleteRepository.loading = false
                     this.fetchData()
                     this.toggleDeleteRepositoryModal()
+                })
+        },
+
+        githubAddUserAsCollaborator(user) {
+            axios.post(`/integrations/github/repo/${this.assignment.id}/collaborators/add/${user}`)
+                .then((res) => {
+                    console.log(res)
                 })
         },
     },

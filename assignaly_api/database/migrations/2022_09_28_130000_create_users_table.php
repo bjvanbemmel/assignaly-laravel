@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignId('institute_id')->constrained()->cascadeOnDelete();
             $table->foreignId('role_id')->constrained()->cascadeOnDelete();
             $table->string('settings')->default(json_encode(['profile_icon_color' => 'blue']));
-            $table->string('integrations')->default(json_encode(["github" => ""]));
             $table->rememberToken();
             $table->timestamps();
         });

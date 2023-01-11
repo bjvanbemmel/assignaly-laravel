@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Assignment::class, 'assignment_users');
     }
+
+    public function integrations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(GitIntegration::class);
+    }
+
+    public function integration(string $networkName)
+    {
+        return $this->hasMany(GitIntegration::class)->where('network_id', GitNetwork::query()->where('name', $networkName)->first()->id)->first();
+    }
 }

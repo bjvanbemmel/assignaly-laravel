@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GithubDeleteRepositoryRequest;
 use App\Http\Requests\GithubNewRepositoryRequest;
 use App\Http\Requests\GithubNewTokenRequest;
 use App\Models\Assignment;
+use App\Models\GitIntegration;
+use App\Models\GitNetwork;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 
@@ -25,10 +29,20 @@ class GithubController extends Controller
 
     public function user(Request $request): JsonResponse
     {
-        $response = Http::withToken($request->user()->integrations['github'])
+        try {
+            $response = Http::withToken($request->user()->integration('Github')->api_key)
             ->get('https://api.github.com/user');
 
-        return new JsonResponse($response->json(), $response->status());
+            $request->user()->integration('Github')->update([
+                'username' => $response->json()['login'],
+            ]);
+
+            return new JsonResponse($response->json(), $response->status());
+
+        } catch (\Exception $e) {
+
+            return new JsonResponse([], 404);
+        }
     }
 
     public function newToken(GithubNewTokenRequest $request): JsonResponse
@@ -45,8 +59,18 @@ class GithubController extends Controller
             return new JsonResponse($response->json(), 422);
         }
 
-        $request->user()->integrations = array_merge($request->user()->integrations, ['github' => $response->json()['access_token']]);
-        $request->user()->save();
+        GitIntegration::firstOrCreate([
+            'network_id' => GitNetwork::query()->where('name', 'Github')->first()->id,
+            'user_id' => $request->user()->id,
+        ],
+        [
+            'network_id' => GitNetwork::query()->where('name', 'Github')->first()->id,
+            'user_id' => $request->user()->id,
+            'api_key' => $response->json()['access_token'],
+        ])
+        ->update([
+            'api_key' => $response->json()['access_token'],
+        ]);
 
         return new JsonResponse($response->json(), $response->status());
     }
@@ -56,8 +80,10 @@ class GithubController extends Controller
         $response = Http::acceptJson()
             ->withBasicAuth(config('integrations.github.client_id'), config('integrations.github.client_secret'))
             ->delete('https://api.github.com/applications/' . config('integrations.github.client_id') . '/grant', [
-                'access_token' => $request->user()->integrations['github'] 
+                'access_token' => $request->user()->integration('Github')->api_key
             ]);
+
+        $request->user()->integration('Github')->delete();
 
         return new JsonResponse($response->json(), $response->status());
     }
@@ -65,7 +91,7 @@ class GithubController extends Controller
     public function newRepository(GithubNewRepositoryRequest $request): JsonResponse
     {
         $response = Http::acceptJson()
-            ->withToken($request->user()->integrations['github'])
+            ->withToken($request->user()->integration('Github')->api_key)
             ->post('https://api.github.com/user/repos', [
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
@@ -84,12 +110,10 @@ class GithubController extends Controller
         return new JsonResponse($response->json(), $response->status());
     }
 
-    public function deleteRepository(GithubDeleteRepositoryRequest $request): JsonResponse
+    public function deleteRepository(Request $request, Assignment $assignment): JsonResponse
     {
-        $assignment = Assignment::findOrFail($request->input('assignment_id'));
-
         $response = Http::acceptJson()
-            ->withToken($request->user()->integrations['github'])
+            ->withToken($request->user()->integration('Github')->api_key)
             ->delete($assignment->remote_repository['api_url']);
 
         if ($response->successful()) {
@@ -101,15 +125,14 @@ class GithubController extends Controller
         return new JsonResponse($response->json(), $response->status());
     }
 
-    public function addCollaboratorToRepository(Http $request): JsonResponse
+    public function addCollaboratorToRepository(Request $request, Assignment $assignment, User $user): JsonResponse
     {
-        $assignment = Assignment::findOrFail($request->input('assignment_id'));
-
         $response = Http::acceptJson()
-            ->withToken($request->user()->integrations['github'])
+            ->withToken($request->user()->integration('Github')->api_key)
             ->put('https://api.github.com/repos/'
                 . $assignment->remote_repository['api_url']
                 . '/collaborators/'
+                . $user->integration('Github')->username
         );
 
         return new JsonResponse($response->json(), $response->status());

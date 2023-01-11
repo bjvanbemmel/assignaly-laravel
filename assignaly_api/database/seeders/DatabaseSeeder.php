@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AssignmentSeeder::class,
             AssignmentUserSeeder::class,
+            GitNetworkSeeder::class,
         ]);
     }
 }
