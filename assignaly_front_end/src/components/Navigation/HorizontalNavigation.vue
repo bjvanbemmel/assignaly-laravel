@@ -81,7 +81,7 @@
                         <router-link
                             v-else
                             v-for="assignment, key in latestAssignments"
-                            to="/"
+                            :to="{ name: 'assignments.detail', params: { id: assignment.id } }"
                             :key="key"
                             class="flex w-full justify-between first:rounded-t-md last:rounded-b-md p-4 border border-b-0 last:border-b border-zinc-600 hover:text-zinc-300"
                         >
