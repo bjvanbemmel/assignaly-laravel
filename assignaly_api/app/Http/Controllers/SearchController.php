@@ -21,7 +21,7 @@ class SearchController extends Controller
         } else {
             return new JsonResponse([
                 'users' => UserResource::collection(User::query()->where('name', 'LIKE', "%{$request->input('query')}%")->limit(5)->get()),
-                'assignments' => AssignmentResource::collection(Assignment::query()->where('title', 'LIKE', "%{$request->input('query')}%")->limit(5)->get()),
+                'assignments' => AssignmentResource::collection(Auth()->user()->allAssignments()->where('title', 'LIKE', "%{$request->input('query')}%")->limit(5)->get()),
             ]);
         }
     }

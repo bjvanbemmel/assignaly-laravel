@@ -47,12 +47,16 @@ class AssignmentController extends Controller
         return AssignmentResource::make($assignment);
     }
 
-    public function show(Assignment $assignment): AssignmentResource
+    public function show(Assignment $assignment): AssignmentResource | JsonResponse
     {
+        if ((!$assignment->users->contains(Auth::user()) && Auth::user()->id !== $assignment->owner->id) && Auth::user()->role->level < 2) {
+            return new JsonResponse(['error' => 'You\'re not authorized to view this assignment'], 401);
+        }
+
         return AssignmentResource::make($assignment);
     }
 
-    public function update(Assignment $assignment, AssignmentUpdateRequest $request): AssignmentResource
+    public function update(Assignment $assignment, AssignmentUpdateRequest $request): AssignmentResource | JsonResponse
     {
         if (Auth::user()->role->level < 2) {
             return new JsonResponse(['error' => 'You\'re not authorized to update an assignment.'], 401);
@@ -70,7 +74,7 @@ class AssignmentController extends Controller
         return AssignmentResource::make($assignment);
     }
 
-    public function destroy(Assignment $assignment): bool
+    public function destroy(Assignment $assignment): bool | JsonResponse
     {
         if (Auth::user()->role->level < 2) {
             return new JsonResponse(['error' => 'You\'re not authorized to delete an assignment.'], 401);

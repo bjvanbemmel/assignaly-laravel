@@ -6,7 +6,9 @@
             v-if="assignment && loggedInUser.id === assignment.owner.id"
             class="flex flex-wrap gap-2"
         >
-            <default-button>
+            <default-button
+                :to="{ name: 'assignments.update', params: {id: assignment.id} }"
+            >
                 <hero-icon
                     name="PencilSquare"
                     class="h-4 mr-1"
@@ -209,11 +211,13 @@
                                 </a>
 
                                 <default-button
+                                    v-if="hasGithubIntegration(loggedInUser)"
                                     text="Edit repository"
                                     @click="toggleUpdateRepositoryModal()"
                                 />
 
                                 <default-button
+                                    v-if="hasGithubIntegration(loggedInUser)"
                                     text="Delete repository"
                                     @click="toggleDeleteRepositoryModal()"
                                 />
@@ -265,8 +269,9 @@
                             </div>
                             <div v-else>
                                 <default-button
-                                    text="Create new repository"
+                                    :text="hasGithubIntegration(loggedInUser) ? 'Create new repository' : 'Enable Git integration for your account'"
                                     @click="toggleNewRepositoryModal()"
+                                    :disabled="!hasGithubIntegration(loggedInUser)"
                                 />
                             </div>
                         </div>
@@ -1058,7 +1063,6 @@ export default {
             this.fetchData()
             this.collabInvitesSent = []
             useDropdownStore().setName('')
-            console.log(useDropdownStore().getName)
         },
 
         'modals.newRepository.data.options': {

@@ -49,6 +49,7 @@
                         <router-link
                             :to="{ name: 'assignments.index' }"
                             class="flex items-center space-x-2 p-2 border rounded-t-md hover:text-zinc-300 border-zinc-600"
+                            :class="user.role.level >= 2 ? 'rounded-t-md' : 'rounded-md'"
                         >
                             <hero-icon
                                 name="PuzzlePiece"
@@ -58,6 +59,7 @@
                             <p>View all assignments</p>
                         </router-link>
                         <router-link
+                            v-if="user.role.level >= 2"
                             :to="{ name: 'assignments.create' }"
                             class="flex items-center space-x-2 p-2 border rounded-b-md border-t-0 hover:text-zinc-300 border-zinc-600"
                         >

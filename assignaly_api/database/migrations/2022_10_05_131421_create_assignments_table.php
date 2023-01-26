@@ -21,6 +21,7 @@ return new class extends Migration
             $table->mediumText('description')->nullable();
             $table->dateTime('due_at')->nullable();
             $table->dateTime('finished_at')->nullable();
+            $table->boolean('turned_in')->nullable();
             $table->integer('review')->nullable();
             $table->string('feedback')->nullable();
             $table->string('status')->default('open');

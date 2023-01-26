@@ -11,6 +11,7 @@ import Dashboard from '@/views/dashboard/Index.vue'
 import Assignments from '@/views/assignments/Index.vue'
 import Assignment from '@/views/assignments/Detail.vue'
 import AssignmentCreate from '@/views/assignments/Create.vue'
+import AssignmentUpdate from '@/views/assignments/Update.vue'
 import Classrooms from '@/views/classrooms/Index.vue'
 import AccountSettings from '@/views/accountsettings/Index.vue'
 import axios from 'axios'
@@ -71,6 +72,15 @@ const router = createRouter({
             },
         },
         {
+            path: '/assignments/update/:id',
+            name: 'assignments.update',
+            component: AssignmentUpdate,
+            meta: {
+                indexed: false,
+                label: 'Assignments',
+            },
+        },
+        {
             path: '/classrooms',
             name: 'classrooms.index',
             component: Classrooms,
@@ -90,14 +100,6 @@ const router = createRouter({
                 icon: 'Cog6Tooth',
             },
         },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
     ],
 })
 

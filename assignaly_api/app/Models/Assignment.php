@@ -22,6 +22,7 @@ class Assignment extends Model
         'description',
         'due_at',
         'finished_at',
+        'turned_in',
         'review',
         'feedback',
         'status',

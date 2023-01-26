@@ -1,23 +1,25 @@
 <template>
     <div class="flex flex-col space-y-4">
         <page-title>
-            Create assignment:
+            Update assignment:
         </page-title>
 
         <div class="grid gap-4 sm:grid-cols-2">
             <form
-                @submit.prevent="createAssignment"
+                @submit.prevent="updateAssignment"
                 name="create-form"
                 class="flex flex-col gap-2"
             >
                 <default-text-input
                     @update="(input) => this.title = input"
+                    :value="assignment.title"
                     name="create-title"
                     placeholder="Title"
                     required
                 />
                 <default-text-input
                     @update="(input) => this.description = input"
+                    :value="assignment.description"
                     name="create-description"
                     rows="6"
                     type="textarea"
@@ -26,6 +28,7 @@
                 />
                 <default-text-input
                     @update="(input) => this.due_at = input"
+                    :value="dueDate"
                     name="create-due"
                     placeholder="Due at"
                     type="date"
@@ -92,7 +95,7 @@
 
                 <default-button
                     class="w-32 mt-4 ml-auto"
-                    text="Create"
+                    text="Update"
                 />
             </form>
         </div>
@@ -124,10 +127,19 @@ export default {
         DropdownToggler,
     },
 
+    created () {
+        if (useUserStore().getData.id !== this.assignment.owner_id) {
+            this.$router.push({ name: 'assignments.index' })
+        }
+
+        this.fetchData()
+    },
+
     data () {
         return {
             title: '',
             description: '',
+            assignment: {},
             users: {
                 active: false,
                 query: '',
@@ -139,22 +151,31 @@ export default {
         }
     },
 
-    created () {
-        if (useUserStore().getData.role.level < 2) {
-            this.$router.push({ name: 'assignments.index' })
-        }
-    },
-
     methods: {
-        createAssignment () {
-            axios.post('/assignments', {
+        fetchData () {
+            axios.get(`/assignments/${this.$route.params.id}`)
+                .then((res) => {
+                    this.assignment = res.data.data
+                    this.title = this.assignment.title
+                    this.description = this.assignment.description
+                    this.due_at = this.assignment.due_at
+
+                    this.users.selected = res.data.data.users
+                })
+                .catch((res) => {
+                    console.log(res)
+                })
+        },
+
+        updateAssignment () {
+            axios.put(`/assignments/${this.$route.params.id}`, {
                 owner_id: useUserStore().getData.id,
                 title: this.title,
                 description: this.description,
                 users: this.users.selected.map((user) => user.id),
                 due_at: this.due_at,
             })
-                .then((res) => this.$router.push({ name: 'assignments.detail', params: {id: res.data.data.id}}))
+                .then((res) => this.$router.push({ name: 'assignments.detail', params: {id: res.data.data.id}, }))
         },
 
         queryUsers:  debounce (function (query) {
@@ -198,7 +219,19 @@ export default {
         }, 100),
     },
 
+    computed: {
+        dueDate () {
+            let date = new Date(this.assignment.due_at)
+            return date.toLocaleDateString('en-CA')
+        },
+    },
+
     watch: {
+        '$route.params' () {
+            this.fetchData()
+            useDropdownStore().setName('')
+        },
+
         'users.query' (to, from) {
             if (to === from) {
                 return

@@ -19,7 +19,7 @@ class AssignmentFactory extends Factory
     public function definition()
     {
         return [
-            'owner_id' => User::where('name', '=', 'Test User')->first()->id,
+            'owner_id' => User::where('name', '=', 'Test Teacher')->first()->id,
             'created_at' => fake()->dateTimeThisYear(),
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
