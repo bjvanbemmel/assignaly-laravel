@@ -1,4 +1,40 @@
 <template>
+    <section
+        class="pb-6"
+    >
+        <div
+            v-if="assignment && loggedInUser.id === assignment.owner.id"
+            class="flex flex-wrap gap-2"
+        >
+            <default-button>
+                <hero-icon
+                    name="PencilSquare"
+                    class="h-4 mr-1"
+                />
+                Edit assignment
+            </default-button>
+
+            <default-dropdown
+                :options="dropdowns.status.options"
+                :default="dropdowns.status.selected"
+                name="assignment-status-dropdown"
+                @update="(option) => dropdownStatusUpdate(option)"
+            />
+
+            <default-button
+                text="Delete"
+                @click="toggleDeletionModal"
+            />
+        </div>
+        <div
+            v-else
+        >
+            <default-button
+                text="Turn in"
+                @click.stop=""
+            />
+        </div>
+    </section>
     <section class="text-white grid sm:grid-cols-3 gap-4">
         <section class="flex gap-4 flex-col col-span-2">
             <div
@@ -126,10 +162,10 @@
                                 </a>
                             </div>
                             <default-button
-                                v-if="assignment.remote_repository && hasGithubIntegration(user) && !isCollaboratorToRepository(user)"
+                                v-if="loggedInUser.isCollaboratorToRepository && assignment.users.filter((u) => u.id === loggedInUser.id).length > 0 && assignment.remote_repository && user.id !== loggedInUser.id && user.isCollaboratorToRepository === false"
                                 @click="githubAddUserAsCollaborator(user.id)"
                                 class="ml-auto mr-4"
-                                title="Add as collaborator"
+                                title="Add as collaborator to repository"
                                 :disabled="collabInvitesSent.includes(user.id)"
                             >
                                 <p
@@ -143,75 +179,98 @@
                                     name="UserPlus"
                                     class="h-4"
                                 />
-                                
+
                             </default-button>
                         </div>
                     </div>
-                </div>
 
-                <label class="text-sm">
-                    Remote repository:
-                </label>
+                    <div>
+                        <label class="text-sm">
+                            Remote repository:
+                        </label>
 
-                <div class="p-2 bg-zinc-900/50 rounded-md border border-zinc-700">
-                    <div
-                        v-if="assignment.remote_repository !== null"
-                        class="flex gap-2"
-                    >
-                        <a
-                            target="_blank"
-                            ref="noreferrer noopener"
-                            :href="assignment.remote_repository.public_url"
-                        >
-                            <default-button>
-                                View on Github
-                                <hero-icon
-                                    name="ArrowTopRightOnSquare"
-                                    class="h-3 mb-auto"
+                        <div class="p-2 bg-zinc-900/50 rounded-md border border-zinc-700">
+                            <div
+                                v-if="assignment.remote_repository !== null && loggedInUser.isCollaboratorToRepository === true"
+                                class="flex gap-2"
+                            >
+                                <a
+                                    target="_blank"
+                                    ref="noreferrer noopener"
+                                    :href="assignment.remote_repository.public_url"
+                                >
+                                    <default-button>
+                                        View on Github
+                                        <hero-icon
+                                            name="ArrowTopRightOnSquare"
+                                            class="h-3 mb-auto"
+                                        />
+                                    </default-button>
+                                </a>
+
+                                <default-button
+                                    text="Edit repository"
+                                    @click="toggleUpdateRepositoryModal()"
                                 />
-                            </default-button>
-                        </a>
 
-                        <default-button
-                            text="Edit repository"
-                            @click="toggleUpdateRepositoryModal()"
-                        />
-
-                        <default-button
-                            text="Delete repository"
-                            @click="toggleDeleteRepositoryModal()"
-                        />
+                                <default-button
+                                    text="Delete repository"
+                                    @click="toggleDeleteRepositoryModal()"
+                                />
+                            </div>
+                            <div
+                                v-else-if="assignment.remote_repository !== null && assignment.remote_repository.private === false"
+                                class="flex gap-2"
+                            >
+                                <a
+                                    target="_blank"
+                                    ref="noreferrer noopener"
+                                    :href="assignment.remote_repository.public_url"
+                                >
+                                    <default-button>
+                                        View on Github
+                                        <hero-icon
+                                            name="ArrowTopRightOnSquare"
+                                            class="h-3 mb-auto"
+                                        />
+                                    </default-button>
+                                </a>
+                                <p v-if="assignment.remote_repository.private" class="text-xs text-zinc-400"> This repository is private </p>
+                            </div>
+                            <div 
+                                v-else-if="assignment.remote_repository !== null && ((assignment.users.filter((user) => user.id === loggedInUser.id).length === 0 && loggedInUser.role.level >= 2) || assignment.owner.id === loggedInUser.id)"
+                                class="flex gap-2"
+                            >
+                                <a
+                                    target="_blank"
+                                    ref="noreferrer noopener"
+                                    :href="assignment.remote_repository.public_url"
+                                >
+                                    <default-button>
+                                        View on Github
+                                        <hero-icon
+                                            name="ArrowTopRightOnSquare"
+                                            class="h-3 mb-auto"
+                                        />
+                                    </default-button>
+                                </a>
+                                <p v-if="assignment.remote_repository.private" class="text-xs text-zinc-400"> This repository is private </p>
+                            </div>
+                            <div v-else-if="assignment.remote_repository !== null && loggedInUser.isCollaboratorToRepository === false">
+                                <default-button
+                                    text="Repository already exists"
+                                    @click="toggleNewRepositoryModal()"
+                                    disabled
+                                />
+                            </div>
+                            <div v-else>
+                                <default-button
+                                    text="Create new repository"
+                                    @click="toggleNewRepositoryModal()"
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    <div v-else>
-                        <default-button
-                            text="Create new repository"
-                            @click="toggleNewRepositoryModal()"
-                        />
-                    </div>
-                </div>
-
-                <label class="text-sm">
-                    Actions:
-                </label>
-
-                <div
-                    class="flex gap-2 p-2 bg-zinc-900/50 rounded-md border border-zinc-700"
-                >
-                    <default-dropdown
-                        :options="dropdowns.status.options"
-                        :default="dropdowns.status.selected"
-                        name="assignment-status-dropdown"
-                        @update="(option) => dropdownStatusUpdate(option)"
-                    />
-                    <default-button
-                        text="Turn in"
-                        @click.stop=""
-                    />
-                    <default-button
-                        text="Delete"
-                        @click="toggleDeletionModal"
-                    />
                 </div>
             </div>
         </div>
@@ -237,6 +296,7 @@
             <template v-slot:content>
                 <div class="w-full text-center p-2">
                     <p>Are you sure you wish to permanently delete this assignment?</p>
+                    <p>The associated repository will not be deleted.</p>
                     <p>Assigned users will be notified.</p>
                     <p class="text-red-600 font-bold">This action is irreversible.</p>
                 </div>
@@ -273,10 +333,10 @@
 
             <template v-slot:content>
                 <default-alert
-                    v-if="modals.newRepository.data.error"
+                    v-if="modals.newRepository.error"
                     class="mx-2"
                 >
-                    {{ modals.newRepository.data.error }}
+                    {{ modals.newRepository.error }}
                 </default-alert>
                 <div
                     v-if="modals.newRepository.loading"
@@ -422,13 +482,14 @@
 
             <template v-slot:content>
                 <default-alert
-                    v-if="modals.updateRepository.data.error"
+                    v-if="modals.updateRepository.error"
                     class="mx-2"
                 >
-                    {{ modals.updateRepository.data.error }}
+                    {{ modals.updateRepository.error }}
                 </default-alert>
+
                 <div
-                    v-if="modals.updateRepository.loading"
+                    v-else-if="modals.updateRepository.loading"
                     class="h-32 flex justify-center items-center"
                 >
                     <hero-icon
@@ -443,7 +504,6 @@
                 >
                     <section
                         class="flex flex-col gap-6"
-                        :class="{ 'text-zinc-600': dropdowns.integrationType.selected.value === null }"
                     >
                         <div
                             class="flex flex-col space-y-0.5"
@@ -456,9 +516,8 @@
                             </label>
 
                             <default-text-input
-                                name="assignment-new-repository-title"
-                                :placeholder="toSlug(assignment.title)"
-                                :value="modals.updateRepository.data.title"
+                                name="assignment-update-repository-title"
+                                placeholder="New title"
                                 @update="(text) => modals.updateRepository.data.title = toSlug(text)"
                             />
 
@@ -471,14 +530,14 @@
                             class="flex flex-col space-y-0.5"
                         >
                             <label
-                                for="assignment-new-repository-desc"
+                                for="assignment-update-repository-desc"
                                 class="text-sm"
                             >
                                 Repository description:
                             </label>
 
                             <default-text-input
-                                name="assignment-new-repository-desc"
+                                name="assignment-update-repository-desc"
                                 placeholder="My blazingly fast <insert language here> framework."
                                 @update="(text) => modals.updateRepository.data.desc = text"
                             />
@@ -518,10 +577,11 @@
 
             <template v-slot:actions>
                 <default-button
+                    v-if="!modals.updateRepository.error"
                     text="Update repository"
                     :disabled="modals.updateRepository.loading"
                     class="enabled:bg-green-800 enabled:border-green-700 enabled:hover:bg-green-900"
-                    @click.stop="githubNewRepository()"
+                    @click.stop="githubUpdateRepository()"
                 />
 
                 <default-button
@@ -564,7 +624,16 @@
                     v-else
                     class="p-2 flex flex-col gap-6"
                 >
-                    <div class="w-full text-center p-2">
+                    <div 
+                        v-if="modals.deleteRepository.error"
+                        class="w-full text-center p-2"
+                    >
+                        <default-alert>{{ modals.deleteRepository.error }}</default-alert>
+                    </div>
+                    <div 
+                        v-else
+                        class="w-full text-center p-2"
+                    >
                         <p>Are you sure you wish to permanently delete the associated remote repository?</p>
                         <p>Assigned users will be notified.</p>
                         <p class="text-red-600 font-bold">This action is irreversible.</p>
@@ -574,6 +643,7 @@
 
             <template v-slot:actions>
                 <default-button
+                    v-if="modals.deleteRepository.error === null"
                     text="Delete"
                     :disabled="modals.deleteRepository.loading"
                     class="enabled:bg-red-800 enabled:border-red-700 enabled:hover:bg-red-900"
@@ -602,6 +672,7 @@ import Modal from './../../components/Modal.vue'
 import UserIcon from './../../components/UserIcon.vue'
 import axios from 'axios'
 import { useDropdownStore, } from '../../stores/dropdown.js'
+import { useUserStore, } from '../../stores/user.js'
 
 export default {
 
@@ -616,12 +687,16 @@ export default {
         UserIcon,
     },
 
-    created () {
-        this.fetchData()
+    async created () {
+        this.loggedInUser = useUserStore().getData
+        this.fetchData().then(async () => {
+            this.checkCollaborators()
+        })
     },
 
     data () {
         return {
+            loggedInUser: {},
             assignment: null,
             modals: {
                 deleteAssignment: {
@@ -649,8 +724,8 @@ export default {
                                 value: false,
                             },
                         ],
-                        error: null,
                     },
+                    error: null,
                 },
 
                 updateRepository: {
@@ -663,18 +738,19 @@ export default {
                         options: [
                             {
                                 label: 'Make repository private.',
-                                name: 'assignment-new-repository-private',
+                                name: 'assignment-update-repository-private',
                                 enabled: true,
                                 value: false,
                             },
                         ],
-                        error: null,
                     },
+                    error: null,
                 },
 
                 deleteRepository: {
                     active: false,
                     loading: false,
+                    error: null,
                 },
             },
 
@@ -723,10 +799,10 @@ export default {
             return string.toLowerCase().replace(/ /g, '-').replace(/[^A-Za-z0-9-_]/g, '')
         },
 
-        fetchData () {
+        async fetchData () {
             this.loading = true
 
-            axios.get(`/assignments/${this.$route.params.id}`)
+            return axios.get(`/assignments/${this.$route.params.id}`)
                 .then((res) => {
                     this.assignment = res.data.data
                     this.modals.newRepository.data.title = this.toSlug(this.assignment.title)
@@ -742,6 +818,9 @@ export default {
                     }
 
                     this.loading = false
+                })
+                .catch(() => {
+                    this.$router.push({name: 'assignments.index'})
                 })
         },
 
@@ -772,6 +851,7 @@ export default {
             }
 
             this.modals.newRepository.active = !this.modals.newRepository.active
+            this.modals.newRepository.error = null
         },
 
         toggleUpdateRepositoryModal () {
@@ -780,6 +860,7 @@ export default {
             }
 
             this.modals.updateRepository.active = !this.modals.updateRepository.active
+            this.modals.updateRepository.error = null
         },
 
         toggleDeleteRepositoryModal () {
@@ -788,6 +869,7 @@ export default {
             }
 
             this.modals.deleteRepository.active = !this.modals.deleteRepository.active
+            this.modals.deleteRepository.error = null
         },
 
         approveDeletionModal () {
@@ -795,10 +877,10 @@ export default {
             this.deleteAssignment()
         },
 
-        githubNewRepository () {
+        async githubNewRepository () {
             let validationErrors = this.githubValidateNewRepositoryInput()
             if (validationErrors !== true) {
-                this.modals.newRepository.data.error = validationErrors
+                this.modals.newRepository.error = validationErrors
                 return
             }
 
@@ -811,15 +893,72 @@ export default {
                 description: this.modals.newRepository.data.desc,
                 private: this.modals.newRepository.data.options.find(option => option.name === 'assignment-new-repository-private').value,
             })
-                .then(() => {
+                .then(async () => {
                     this.modals.newRepository.loading = false
-                    this.fetchData()
+                    this.fetchData().then(() => {
+                        this.checkCollaborators()
+                    })
+
+                    if (this.modals.newRepository.data.options.find(option => option.name === 'assignment-new-repository-invite-assignees').value) {
+                        for (let user of this.assignment.users.filter(user => user.id !== this.loggedInUser.id && this.hasGithubIntegration(user) && !user.isCollaboratorToRepository)) {
+                            console.log(user)
+                            this.githubAddUserAsCollaborator(user.id)
+                        }
+                    }
                     this.toggleNewRepositoryModal()
+                })
+        },
+
+        githubUpdateRepository () {
+            let validationErrors = this.githubValidateUpdateRepositoryInput()
+            if (validationErrors !== true) {
+                this.modals.updateRepository.error = validationErrors
+                return
+            }
+
+            this.modals.updateRepository.loading = true
+
+            axios.put(`/integrations/github/repo/${this.assignment.id}`, {
+                name: this.modals.updateRepository.data.title,
+                description: this.modals.updateRepository.data.desc,
+                private: this.modals.updateRepository.data.options.find(option => option.name === 'assignment-update-repository-private').value,
+            })
+                .then(() => {
+                    this.modals.updateRepository.loading = false
+                    this.fetchData()
+                    this.toggleUpdateRepositoryModal()
+                })
+                .catch((res) => {
+                    this.modals.updateRepository.loading = false
+                    this.modals.updateRepository.error = res.response.data.message ?? "Something went wrong"
                 })
         },
 
         githubValidateNewRepositoryInput () {
             const input = this.modals.newRepository.data
+            input.error = null
+
+            if (input.title.length === 0) {
+                return 'Title may not be empty.'
+            }
+
+            if (input.title.length > 100) {
+                return 'Title may not be longer than 100 characters.'
+            }
+
+            if (/[`!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?~]/.test(input.title)) {
+                return 'Title may not contain special characters'
+            }
+
+            if (input.desc.length > 255) {
+                return 'Description may not be longer than 255 characters.'
+            }
+
+            return true
+        },
+
+        githubValidateUpdateRepositoryInput () {
+            const input = this.modals.updateRepository.data
             input.error = null
 
             if (input.title.length === 0) {
@@ -851,6 +990,10 @@ export default {
                     this.fetchData()
                     this.toggleDeleteRepositoryModal()
                 })
+                .catch((res) => {
+                    this.modals.deleteRepository.loading = false
+                    this.modals.deleteRepository.error = res.response.data.message ?? "Something went wrong"
+                })
         },
 
         githubAddUserAsCollaborator (user) {
@@ -867,11 +1010,46 @@ export default {
             }).length > 0
         },
 
-        isCollaboratorToRepository (user) {
-            axios.get(`/integrations/github/repo/${this.assignment.id}/collaborators/${user.id}`)
-                .then((res) => {
-                    console.log(res)
+        async isCollaboratorToRepository (user) {
+            return axios.get(`/integrations/github/repo/${this.assignment.id}/collaborators/${user.id}`)
+                .then(() => {
+                    return true
                 })
+                .catch(() => {
+                    return false
+                })
+        },
+
+        async checkCollaborators() {
+            let users = [...this.assignment.users]
+
+            if (!users.filter((user) => user.id === this.assignment.owner.id)) {
+                users.push(this.assignment.owner.id)
+            }
+
+            if (!this.assignment.remote_repository) {
+                return
+            }
+
+            for (let user in users) {
+                user = users[user]
+
+                if (!this.hasGithubIntegration(user)) {
+                    continue
+                }
+
+                let checkCollab = async () => {
+                    user.isCollaboratorToRepository = await this.isCollaboratorToRepository(user)
+
+                    if (user.id === this.loggedInUser.id) {
+                        this.loggedInUser.isCollaboratorToRepository = user.isCollaboratorToRepository
+                    }
+                }
+
+                checkCollab()
+            }
+
+            console.log(users)
         },
     },
 

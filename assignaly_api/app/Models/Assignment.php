@@ -51,7 +51,7 @@ class Assignment extends Model
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'assignment_users');
+        return $this->belongsToMany(User::class, 'assignment_users')->withTimestamps();
     }
 
     public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo

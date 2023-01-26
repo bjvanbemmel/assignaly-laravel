@@ -40,6 +40,7 @@
                         <default-text-input
                             @keypress.stop
                             @input="(input) => this.users.query = input.target.value"
+                            @focus.stop="users.active = true"
                             name="create-user-search"
                             class="w-full"
                             placeholder="Users"

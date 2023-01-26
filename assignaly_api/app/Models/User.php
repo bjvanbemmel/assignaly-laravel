@@ -67,6 +67,18 @@ class User extends Authenticatable
         return $this->belongsToMany(Assignment::class, 'assignment_users');
     }
 
+    public function allAssignments()
+    {
+        return Assignment::query()->select('assignments.*')
+            ->distinct()
+            ->leftJoin('assignment_users', function(\Illuminate\Database\Query\Builder $join) {
+                $join->on('assignments.id', 'assignment_users.assignment_id')
+                    ->where('assignment_users.user_id', $this->id);
+        })
+        ->where('owner_id', $this->id)
+        ->orWhere('assignment_users.user_id', $this->id);
+    }
+
     public function integrations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(GitIntegration::class);

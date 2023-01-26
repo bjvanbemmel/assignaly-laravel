@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GithubNewRepositoryRequest;
 use App\Http\Requests\GithubNewTokenRequest;
+use App\Http\Requests\GithubUpdateRepositoryRequest;
 use App\Models\Assignment;
 use App\Models\GitIntegration;
 use App\Models\GitNetwork;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 
@@ -96,16 +100,47 @@ class GithubController extends Controller
                 'private' => $request->boolean('private'),
             ]);
 
+        $responseJson = $response->json();
+
         $assignment = Assignment::findOrFail($request->input('assignment_id'));
         $assignment->update([
             'remote_repository' => [
-                'public_url' => $response->json()['html_url'],
-                'api_url' => $response->json()['url'],
+                'public_url' => $responseJson['html_url'],
+                'api_url' => $responseJson['url'],
+                'private' => $responseJson['private'],
             ],
             'integration_type' => $request->input('integration_type'),
         ]);
 
         return new JsonResponse($response->json(), $response->status());
+    }
+
+    public function updateRepository(GithubUpdateRepositoryRequest $request, Assignment $assignment): JsonResponse
+    {
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integration('Github')->api_key)
+            ->patch($assignment->remote_repository['api_url'], [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'private' => $request->boolean('private'),
+            ]);
+
+        if (!$response->successful()) {
+            return new JsonResponse($response->json(), $response->status());
+        }
+
+        $responseJson = $response->json();
+
+        $assignment->update([
+            'remote_repository' => [
+                'public_url' => $responseJson['html_url'],
+                'api_url' => $responseJson['url'],
+                'private' => $responseJson['private'],
+            ],
+            'integration_type' => $request->input('integration_type'),
+        ]);
+
+        return new JsonResponse($responseJson, $response->status());
     }
 
     public function deleteRepository(Request $request, Assignment $assignment): JsonResponse
@@ -140,6 +175,10 @@ class GithubController extends Controller
 
     public function isCollaboratorToRepository(Request $request, Assignment $assignment, User $user): JsonResponse
     {
+        if (is_null($assignment->remote_repository)) {
+            return new JsonResponse('No remote repository found.', 500);
+        }
+
         $response = Http::acceptJson()
             ->withToken($request->user()->integration('Github')->api_key)
             ->get($assignment->remote_repository['api_url']

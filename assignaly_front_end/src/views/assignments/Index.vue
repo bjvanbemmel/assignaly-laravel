@@ -11,6 +11,7 @@
                     class="flex gap-6 h-full z-20"
                 >
                     <section
+                        v-if="loggedInUser.role.level >= 2"
                         class="flex items-end"
                     >
                         <default-button
@@ -114,6 +115,7 @@ import DefaultDropdown from '../../components/FormInputs/DefaultDropdown.vue'
 import DefaultButton from '../../components/FormInputs/DefaultButton.vue'
 import axios from 'axios'
 import _ from 'lodash'
+import { useUserStore, } from '../../stores/user.js'
 
 export default {
 
@@ -185,6 +187,12 @@ export default {
                     id: assignment.id,
                 },
             })
+        },
+    },
+
+    computed: {
+        loggedInUser () {
+            return useUserStore().getData
         },
     },
 
