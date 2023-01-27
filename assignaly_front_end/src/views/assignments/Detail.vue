@@ -4,11 +4,11 @@
     >
         <div
             v-if="assignment && assignment.review"
-            class="w-96 p-2 bg-zinc-800 border-4 rounded-md flex flex-col mb-6"
-            :class="assignment.review >= 6 ? 'border-green-600' : 'border-red-600'"
+            class="w-96 p-2 rounded-md flex flex-col mb-6 font-semibold"
+            :class="assignment.review >= 6 ? 'bg-green-700' : 'bg-red-700'"
         >
             <h1>Score: <span class="text-lg font-bold">{{ assignment.review }}</span></h1>
-            <h2 class="border-t border-zinc-600 pt-2">"{{ assignment.feedback }}"</h2>
+            <h2 class="pt-2">"{{ assignment.feedback }}"</h2>
         </div>
         <div
             v-if="assignment && loggedInUser.id === assignment.owner.id && assignment.status === 'in-review'"
@@ -121,21 +121,6 @@
                     >
                         {{ assignment.description }}
                     </div>
-                </div>
-            </div>
-
-            <div
-                class="h-fit rounded-md p-6 bg-zinc-800 border border-zinc-800 shadow-md shadow-black/30"
-            >
-                <hero-icon
-                    v-if="loading"
-                    name="ArrowPath"
-                    class="m-auto h-8 text-zinc-500 animate-spin"
-                />
-                <div
-                    v-else
-                >
-                    Comments
                 </div>
             </div>
         </section>
