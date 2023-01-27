@@ -3,7 +3,43 @@
         class="pb-6"
     >
         <div
-            v-if="assignment && loggedInUser.id === assignment.owner.id"
+            v-if="assignment && assignment.review"
+            class="w-96 p-2 bg-zinc-800 border-4 rounded-md flex flex-col mb-6"
+            :class="assignment.review >= 6 ? 'border-green-600' : 'border-red-600'"
+        >
+            <h1>Score: <span class="text-lg font-bold">{{ assignment.review }}</span></h1>
+            <h2 class="border-t border-zinc-600 pt-2">"{{ assignment.feedback }}"</h2>
+        </div>
+        <div
+            v-if="assignment && loggedInUser.id === assignment.owner.id && assignment.status === 'in-review'"
+            class="flex flex-wrap gap-2"
+        >
+            <default-button
+                text="Give feedback"
+                @click="toggleGiveFeedbackModal"
+                class="bg-green-700 border-green-800 hover:bg-green-800 font-bold"
+            >
+                <hero-icon
+                    name="Star"
+                    class="h-4 mr-1"
+                />
+                Give feedback
+            </default-button>
+
+            <default-dropdown
+                :options="dropdowns.status.options"
+                :default="dropdowns.status.selected"
+                name="assignment-status-dropdown"
+                @update="(option) => dropdownStatusUpdate(option)"
+            />
+
+            <default-button
+                text="Delete"
+                @click="toggleDeletionModal"
+            />
+        </div>
+        <div
+            v-else-if="assignment && loggedInUser.id === assignment.owner.id"
             class="flex flex-wrap gap-2"
         >
             <default-button
@@ -29,12 +65,35 @@
             />
         </div>
         <div
-            v-else
+            v-else-if="assignment && assignment.remote_repository"
         >
-            <default-button
-                text="Turn in"
-                @click.stop=""
-            />
+            <div
+                v-if="assignment.status === 'in-review'"
+            >
+                <default-button
+                    @click.stop="toggleCancelSubmissionModal()"
+                >
+                    <hero-icon
+                        name="XMark"
+                        class="h-4 mr-1"
+                    />
+                    Revert submission
+                </default-button>
+            </div>
+            <div
+                v-else
+            >
+                <default-button
+                    @click.stop="toggleTurnInAssignmentModal()"
+                >
+                    <hero-icon
+                        name="Flag"
+                        class="h-4 mr-1"
+                    />
+                    Turn in
+                </default-button>
+                <p class="text-sm text-zinc-300 mt-1">Done with your assignment? <u>Turn it in</u>.</p>
+            </div>
         </div>
     </section>
     <section class="text-white grid sm:grid-cols-3 gap-4">
@@ -62,21 +121,6 @@
                     >
                         {{ assignment.description }}
                     </div>
-                </div>
-            </div>
-
-            <div
-                class="h-fit rounded-md p-6 bg-zinc-800 border border-zinc-800 shadow-md shadow-black/30"
-            >
-                <hero-icon
-                    v-if="loading"
-                    name="ArrowPath"
-                    class="m-auto h-8 text-zinc-500 animate-spin"
-                />
-                <div
-                    v-else
-                >
-                    Repository
                 </div>
             </div>
 
@@ -598,7 +642,6 @@
 
         </modal>
 
-
         <!-- Delete repository modal -->
         
         <modal
@@ -659,6 +702,243 @@
                     text="Cancel"
                     :disabled="modals.deleteRepository.loading"
                     @click.stop="() => toggleDeleteRepositoryModal()"
+                />
+            </template>
+        </modal>
+
+        <!-- Turn in assignment modal -->
+        
+        <modal
+            :active="modals.turnInAssignment.active"
+            @click.stop="() => toggleTurnInAssignmentModal()"
+            @close="() => toggleTurnInAssignmentModal()"
+        >
+            <template v-slot:title>
+                Turn in assignment
+            </template>
+
+            <template v-slot:desc>
+                Submit the assignment as-is to the owner.
+            </template>
+
+            <template v-slot:content>
+                <div
+                    v-if="modals.turnInAssignment.loading"
+                    class="flex justify-center items-center"
+                >
+                    <hero-icon
+                        name="ArrowPath"
+                        class="h-8 text-zinc-500 animate-spin"
+                    />
+                </div>
+
+                <div
+                    v-else
+                    class="p-2 flex flex-col gap-6"
+                >
+                    <div 
+                        v-if="modals.turnInAssignment.error"
+                        class="w-full text-center p-2"
+                    >
+                        <default-alert>{{ modals.turnInAssignment.error }}</default-alert>
+                    </div>
+                    <div 
+                        v-else
+                        class="w-full text-center p-2"
+                    >
+                        <p>Are you sure you wish to turn in this assignment?</p>
+                        <p class="text-green-600 font-bold">This action is reversible.</p>
+                    </div>
+                    <div
+                        v-if="assignment.remote_repository"
+                        class="w-full text-center p-2 space-y-2"
+                    >
+                        <h3 class="">Commit history:</h3>
+                        <div class="bg-zinc-800 text-left border-zinc-700 border rounded-md p-2">
+                            <div
+                                class="max-h-64 overflow-y-scroll"
+                            >
+                                <a
+                                    v-for="commit, key of modals.turnInAssignment.data.commits"
+                                    :key="key"
+                                    :href="commit.html_url"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="border-b w-96 pb-1 mb-1 border-zinc-600 flex flex-col hover:underline"
+                                >
+                                    <span class="font-semibold truncate"> {{ commit.commit.message }} </span>
+                                    <span class="text-sm text-zinc-400 truncate">{{ commit.commit.author.name }}</span>
+                                    <span class="text-sm text-zinc-400 truncate">{{ getProperDate(commit.commit.committer.date) }}</span>
+                                </a>
+                                <p class="text-xs text-zinc-400">Only shows the most recent 5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </template>
+
+            <template v-slot:actions>
+                <default-button
+                    v-if="modals.turnInAssignment.error === null"
+                    text="Submit"
+                    :disabled="modals.turnInAssignment.loading"
+                    class="enabled:bg-yellow-800 enabled:border-yellow-700 enabled:hover:bg-yellow-900"
+                    @click.stop="() => turnInAssignment()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    :disabled="modals.turnInAssignment.loading"
+                    @click.stop="() => toggleTurnInAssignmentModal()"
+                />
+            </template>
+
+        </modal>
+
+        <!-- Cancel assignment submission -->
+        
+        <modal
+            :active="modals.revertSubmission.active"
+            @click.stop="() => toggleCancelSubmissionModal()"
+            @close="() => toggleCancelSubmissionModal()"
+        >
+            <template v-slot:title>
+                Revert submission
+            </template>
+
+            <template v-slot:desc>
+                Cancel the submission of this assignment
+            </template>
+
+            <template v-slot:content>
+                <div
+                    v-if="modals.revertSubmission.loading"
+                    class="flex justify-center items-center"
+                >
+                    <hero-icon
+                        name="ArrowPath"
+                        class="h-8 text-zinc-500 animate-spin"
+                    />
+                </div>
+
+                <div
+                    v-else
+                    class="p-2 flex flex-col gap-6"
+                >
+                    <div 
+                        v-if="modals.revertSubmission.error"
+                        class="w-full text-center p-2"
+                    >
+                        <default-alert>{{ modals.revertSubmission.error }}</default-alert>
+                    </div>
+                    <div 
+                        v-else
+                        class="w-full text-center p-2"
+                    >
+                        <p>Are you sure you wish to revert the submission?</p>
+                    </div>
+                </div>
+                </template>
+
+            <template v-slot:actions>
+                <default-button
+                    v-if="modals.revertSubmission.error === null"
+                    text="Submit"
+                    :disabled="modals.revertSubmission.loading"
+                    class="enabled:bg-yellow-800 enabled:border-yellow-700 enabled:hover:bg-yellow-900"
+                    @click.stop="() => revertSubmission()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    :disabled="modals.revertSubmission.loading"
+                    @click.stop="() => toggleCancelSubmissionModal()"
+                />
+            </template>
+
+        </modal>
+
+        <!-- Feedback modal -->
+
+        <modal
+            :active="modals.giveFeedback.active"
+            @click.stop="() => toggleGiveFeedbackModal()"
+            @close="() => toggleGiveFeedbackModal()"
+        >
+            <template v-slot:title>
+                Give feedback
+            </template>
+
+            <template v-slot:desc>
+                Assign a numeric score and additional feedback to this assignment
+            </template>
+
+            <template v-slot:content>
+                <default-alert
+                    v-if="modals.giveFeedback.error"
+                    class="mx-2"
+                >
+                    {{ modals.giveFeedback.error }}
+                </default-alert>
+                <div
+                    v-if="modals.giveFeedback.loading"
+                    class="h-32 flex justify-center items-center"
+                >
+                    <hero-icon
+                        name="ArrowPath"
+                        class="h-8 text-zinc-500 animate-spin"
+                    />
+                </div>
+
+                <div
+                    v-else
+                    class="p-2 flex flex-col gap-6"
+                >
+                    <div
+                        class="flex flex-col space-y-0.5"
+                    >
+                        <label
+                            for="assignment-feedback-review-score"
+                        >
+                            Numeric review score:
+                        </label>
+                        <default-dropdown
+                            :options="dropdowns.reviewScore.options"
+                            :default="dropdowns.reviewScore.selected ?? dropdowns.reviewScore.options[0]"
+                            name="assignment-feedback-review-score"
+                            @update="(option) => dropdowns.reviewScore.selected = option"
+                        />
+                    </div>
+                    <div
+                        class="flex flex-col space-y-0.5"
+                    >
+                        <label
+                            for="assignment-feedback-review-score"
+                        >
+                            Additional feedback:
+                        </label>
+                        <default-text-input
+                            @update="(input) => modals.giveFeedback.data.feedback = input"
+                            type="textarea"
+                            name="assignment-feedback-additional-feedback"
+                            rows="6"
+                        />
+                    </div>
+                </div>
+            </template>
+
+            <template v-slot:actions>
+                <default-button
+                    text="Apply feedback"
+                    :disabled="modals.giveFeedback.loading"
+                    class="enabled:bg-green-800 enabled:border-green-700 enabled:hover:bg-green-900"
+                    @click.stop="giveFeedback()"
+                />
+
+                <default-button
+                    text="Cancel"
+                    :disabled="modals.giveFeedback.loading"
+                    @click.stop="() => toggleGiveFeedbackModal()"
                 />
             </template>
 
@@ -757,6 +1037,31 @@ export default {
                     loading: false,
                     error: null,
                 },
+
+                turnInAssignment: {
+                    active: false,
+                    loading: false,
+                    data: {
+                        commits: [],
+                    },
+                    error: null,
+                },
+
+                revertSubmission: {
+                    active: false,
+                    loading: false,
+                    error: null,
+                },
+
+                giveFeedback: {
+                    active: false,
+                    loading: false,
+                    data: {
+                        review: 0,
+                        feedback: '',
+                    },
+                    error: false,
+                },
             },
 
             loading: false,
@@ -790,6 +1095,52 @@ export default {
                         {
                             label: 'None',
                             value: null,
+                        },
+                    ],
+                },
+
+                reviewScore: {
+                    selected: null,
+                    options: [
+                        {
+                            label: '1',
+                            value: 1,
+                        },
+                        {
+                            label: '2',
+                            value: 2,
+                        },
+                        {
+                            label: '3',
+                            value: 3,
+                        },
+                        {
+                            label: '4',
+                            value: 4,
+                        },
+                        {
+                            label: '5',
+                            value: 5,
+                        },
+                        {
+                            label: '6',
+                            value: 6,
+                        },
+                        {
+                            label: '7',
+                            value: 7,
+                        },
+                        {
+                            label: '8',
+                            value: 8,
+                        },
+                        {
+                            label: '9',
+                            value: 9,
+                        },
+                        {
+                            label: '10',
+                            value: 10,
                         },
                     ],
                 },
@@ -877,9 +1228,101 @@ export default {
             this.modals.deleteRepository.error = null
         },
 
+        toggleTurnInAssignmentModal () {
+            if (this.modals.turnInAssignment.loading) {
+                return
+            }
+
+            this.allCommits()
+            this.modals.turnInAssignment.active = !this.modals.turnInAssignment.active
+            this.modals.turnInAssignment.error = null
+        },
+
+        toggleCancelSubmissionModal () {
+            if (this.modals.revertSubmission.loading) {
+                return
+            }
+
+            this.allCommits()
+            this.modals.revertSubmission.active = !this.modals.revertSubmission.active
+            this.modals.revertSubmission.error = null
+        },
+
+        toggleGiveFeedbackModal () {
+            if (this.modals.giveFeedback.loading) {
+                return
+            }
+
+            this.modals.giveFeedback.active = !this.modals.giveFeedback.active
+            this.modals.giveFeedback.error = null
+        },
+
         approveDeletionModal () {
             this.toggleDeletionModal()
             this.deleteAssignment()
+        },
+
+        turnInAssignment () {
+            this.modals.turnInAssignment.loading = true
+
+            axios.post(`/assignments/${this.assignment.id}/submit`)
+                .then(() => {
+                    this.modals.turnInAssignment.loading = false
+                    this.modals.turnInAssignment.active = false
+                    this.fetchData()
+                })
+                .catch((res) => {
+                    this.modals.turnInAssignment.loading = false
+                    this.modals.turnInAssignment.error = res.response.data.message ?? "Something went wrong"
+                })
+        },
+
+        revertSubmission () {
+            this.modals.revertSubmission.loading = true
+
+            axios.delete(`/assignments/${this.assignment.id}/submit`)
+                .then(() => {
+                    this.modals.revertSubmission.loading = false
+                    this.modals.revertSubmission.active = false
+                    this.fetchData()
+                })
+                .catch((res) => {
+                    this.modals.revertSubmission.loading = false
+                    this.modals.revertSubmission.error = res.response.data.message ?? "Something went wrong"
+                })
+        },
+
+        giveFeedback () {
+            this.modals.giveFeedback.loading = true
+
+            axios.post(`/assignments/${this.assignment.id}/feedback`, {
+                score: this.dropdowns.reviewScore.selected.value,
+                feedback: this.modals.giveFeedback.data.feedback,
+            })
+                .then(() => {
+                    this.modals.giveFeedback.loading = false
+                    this.modals.giveFeedback.active = false
+                    this.fetchData()
+                })
+                .catch((res) => {
+                    this.modals.giveFeedback.loading = false
+                    this.modals.giveFeedback.error = res.message ?? "Something went wrong"
+                })
+        },
+
+        validateGiveFeedback () {
+            const input = this.modals.giveFeedback.data
+            input.error = null
+
+            if (input.review < 1 || input.review > 10) {
+                return 'Score must be between 1 and 10'
+            }
+
+            if (input.feedback.length > 255) {
+                return 'Feedback may not be longer than 255 characters'
+            }
+
+            return true
         },
 
         async githubNewRepository () {
@@ -1055,6 +1498,39 @@ export default {
             }
 
             console.log(users)
+        },
+
+        allCommits () {
+            if (!this.assignment.remote_repository) {
+                return
+            }
+
+            this.modals.turnInAssignment.loading = true
+            axios.get(`/integrations/github/repo/${this.assignment.id}/commits`, {
+                params: {
+                    per_page: 5,
+                },
+            })
+                .then((res) => {
+                    this.modals.turnInAssignment.data.commits = res.data
+                    this.modals.turnInAssignment.loading = false
+                })
+                .catch((res) => {
+                    if (res.response === undefined) {
+                        this.modals.turnInAssignment.error = "Something went wrong"
+                        this.modals.turnInAssignment.loading = false
+
+                        return
+                    }
+
+                    this.modals.turnInAssignment.error = res.response.data.message ?? "Something went wrong"                
+                    this.modals.turnInAssignment.loading = false
+                })
+        },
+
+        getProperDate (date) {
+            let proper = new Date(date)
+            return proper.toLocaleString('nl-NL')
         },
     },
 

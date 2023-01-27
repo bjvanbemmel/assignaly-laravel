@@ -128,11 +128,11 @@ export default {
     },
 
     created () {
-        if (useUserStore().getData.id !== this.assignment.owner_id) {
-            this.$router.push({ name: 'assignments.index' })
-        }
-
-        this.fetchData()
+        this.fetchData().then(() => {
+            if (useUserStore().getData.id !== this.assignment.owner.id) {
+                this.$router.push({ name: 'assignments.index' })
+            }
+        })
     },
 
     data () {
@@ -152,8 +152,8 @@ export default {
     },
 
     methods: {
-        fetchData () {
-            axios.get(`/assignments/${this.$route.params.id}`)
+        async fetchData () {
+            return axios.get(`/assignments/${this.$route.params.id}`)
                 .then((res) => {
                     this.assignment = res.data.data
                     this.title = this.assignment.title

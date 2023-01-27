@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AssignmentStatusEnum;
+use App\Http\Requests\AssignmentGiveFeedbackRequest;
 use App\Http\Requests\AssignmentStoreRequest;
 use App\Http\Requests\AssignmentUpdateRequest;
 use App\Http\Resources\AssignmentResource;
 use App\Models\Assignment;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -66,6 +69,11 @@ class AssignmentController extends Controller
 
         $assignment->update($validated);
 
+        if ($request->input('status') === AssignmentStatusEnum::CLOSED) {
+            $assignment->finished_at = Carbon::now();
+            $assignment->save();
+        }
+
         if (isset($request->validated()['users'])) {
             $users = $request->validated()['users'];
             $assignment->users()->sync($users);
@@ -81,5 +89,45 @@ class AssignmentController extends Controller
         }
 
         return $assignment->deleteOrFail();
+    }
+
+    public function submit(Assignment $assignment): JsonResponse
+    {
+        if (!$assignment->users->contains(Auth::user())) {
+            return new JsonResponse(['error' => 'You\'re not authorized to turn in this assignment.'], 401);
+        }
+
+        $assignment->update([
+            'status' => AssignmentStatusEnum::IN_REVIEW,
+        ]);
+
+        return new JsonResponse($assignment, 200);
+    }
+
+    public function cancelSubmission(Assignment $assignment): JsonResponse
+    {
+        if (!$assignment->users->contains(Auth::user())) {
+            return new JsonResponse(['error' => 'You\'re not authorized to turn in this assignment.'], 401);
+        }
+
+        $assignment->update([
+            'status' => AssignmentStatusEnum::OPEN,
+        ]);
+
+        return new JsonResponse($assignment, 200);
+    }
+
+    public function giveFeedback(AssignmentGiveFeedbackRequest $request, Assignment $assignment): JsonResponse
+    {
+        if (Auth::user()->id !== $assignment->owner->id) {
+            return new JsonResponse(['error' => 'You\'re not authorized to review this assignment.'], 401);
+        }
+
+        $assignment->update([
+            'review' => $request->input('score'),
+            'feedback' => $request->input('feedback'),
+        ]);
+
+        return new JsonResponse($assignment, 200);
     }
 }

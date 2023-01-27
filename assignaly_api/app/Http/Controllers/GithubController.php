@@ -187,4 +187,16 @@ class GithubController extends Controller
 
         return new JsonResponse($response->json(), $response->status());
     }
+
+    public function showCommits(Request $request, Assignment $assignment): JsonResponse
+    {
+        $response = Http::acceptJson()
+            ->withToken($request->user()->integration('Github')->api_key)
+            ->get($assignment->remote_repository['api_url'] . '/commits', [
+                'per_page' => $request->input('per_page') ?? 15,
+                'page' => $request->input('page') ?? 1,
+        ]);
+
+        return new JsonResponse($response->json(), $response->status());
+    }
 }

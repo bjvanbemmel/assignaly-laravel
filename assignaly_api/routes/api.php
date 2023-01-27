@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/assignments', 'store');
         Route::put('/assignments/{assignment}', 'update');
         Route::delete('/assignments/{assignment}', 'destroy');
+        Route::post('/assignments/{assignment}/submit', 'submit');
+        Route::delete('/assignments/{assignment}/submit', 'cancelSubmission');
+        Route::post('/assignments/{assignment}/feedback', 'giveFeedback');
     });
 
     Route::controller(GithubController::class)->group(function() {
@@ -68,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/integrations/github/repo/{assignment}', 'updateRepository');
         Route::post('/integrations/github/repo/{assignment}/collaborators/{user}', 'addCollaboratorToRepository');
         Route::get('/integrations/github/repo/{assignment}/collaborators/{user}', 'isCollaboratorToRepository');
+        Route::get('/integrations/github/repo/{assignment}/commits', 'showCommits');
     });
 
     Route::get('/search', [SearchController::class, 'search']);

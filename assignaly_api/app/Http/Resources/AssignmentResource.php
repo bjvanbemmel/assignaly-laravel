@@ -21,6 +21,7 @@ class AssignmentResource extends JsonResource
             'due_at' => $this->due_at,
             'finished_at' => $this->finished_at,
             'review' => $this->review,
+            'feedback' => $this->feedback,
             'status' => $this->status,
             'integration_type' => $this->integration_type,
             'remote_repository' => $this->remote_repository,
